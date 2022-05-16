@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using CardDB;
 using CardDB.Structs;
+using Library.ID;
 
 namespace ConsoleApplication
 {
@@ -10,10 +11,10 @@ namespace ConsoleApplication
 	{
 		static void Main(string[] args)
 		{
-			Dictionary<int, int> a = new Dictionary<int, int>();
-			
-
-			
+			for (var i = 0; i < 1000; i++)
+			{
+				Console.WriteLine(IDGenerator.Generate());
+			}
 		}
 	}
 }

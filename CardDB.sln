@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Protocol", "CardDB.P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.CardDB", "Test.CardDB\Test.CardDB.csproj", "{B4F7F88C-B2E0-4AE0-9CC9-0D0802EEE178}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{56EA69BB-5E6C-4299-83E7-A7405AA0584E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{B4F7F88C-B2E0-4AE0-9CC9-0D0802EEE178}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4F7F88C-B2E0-4AE0-9CC9-0D0802EEE178}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4F7F88C-B2E0-4AE0-9CC9-0D0802EEE178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
