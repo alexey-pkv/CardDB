@@ -44,8 +44,9 @@ namespace CardDB
 		}
 		
 		
-		public View(IIndexer indexer)
+		public View(string id, IIndexer indexer)
 		{
+			ID = id;
 			m_indexer = indexer;
 		}
 		

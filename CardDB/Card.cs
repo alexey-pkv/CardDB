@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 
@@ -13,6 +12,10 @@ namespace CardDB
 		
 		public void SetProperty(string key, string value) => Properties[key] = value;
 		public void DeleteProperty(string key) => Properties.Remove(key);
+
+		
+		public Card() {}
+		public Card(string id) { ID = id; }
 		
 		
 		public void UpdateSequence(ulong to)

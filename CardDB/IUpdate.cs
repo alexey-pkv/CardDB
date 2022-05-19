@@ -5,7 +5,8 @@ namespace CardDB
 {
 	public interface IUpdate
 	{
-		public Int64 Sequence { get; set; }
+		public ulong Sequence { get; init; }
 		public UpdateTarget TargetType { get; }
+		public UpdateType UpdateType { get; init; }
 	}
 }

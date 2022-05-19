@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using CardDB.Updates;
+using Library.ID;
 
 
 namespace CardDB
@@ -14,10 +16,9 @@ namespace CardDB
 		public HashSet<string> DeletedProperties { get; set; } = null;
 		
 		public HashSet<string> CardIDs { get; set; } = null;
-		public HashSet<string> ViewIDs { get; set; } = null;
+		public string ViewID { get; set; } = null;
 		
 		public IIndexer ViewIndex { get; set; }
-		public ICondition ViewCondition { get; set; }
 		public ICondition UpdateCondition { get; set; }
 			
 		
@@ -25,7 +26,7 @@ namespace CardDB
 		{
 			c.Delete();
 			
-			return CardUpdate.Deleted(c);
+			return CardUpdate.Deleted(this, c);
 		}
 		
 		private CardUpdate ApplyModifyCard(Card c)
@@ -92,7 +93,7 @@ namespace CardDB
 			return CardIDs.Contains(c.ID);
 		}
 		
-		public IUpdate UpdateCard(Card c)
+		public CardUpdate UpdateCard(Card c)
 		{
 			c.UpdateSequence(Sequence);
 			
@@ -114,9 +115,16 @@ namespace CardDB
 			return null;
 		}
 		
-		public IUpdate CreateCard(Card c)
+		public async Task<CardUpdate> CreateCard()
 		{
+			Card c = new(await IDGenerator.Generate());
+
+			foreach (var kvp in Properties)
+			{
+				c.Properties.Add(kvp.Key, kvp.Value);
+			}
 			
+			return CardUpdate.CardCreated(this, c);
 		}
 	}
 }

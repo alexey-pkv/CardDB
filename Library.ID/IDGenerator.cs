@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 
@@ -49,7 +50,7 @@ namespace Library.ID
 		
 		
 		
-		public static string Generate()
+		public static async Task<string> Generate()
 		{
 			ulong val;
 			ulong time;
@@ -67,7 +68,7 @@ namespace Library.ID
 					}
 				}
 				
-				Thread.Sleep(100);
+				await Task.Delay(100);
 			}
 			
 			val = val | time;

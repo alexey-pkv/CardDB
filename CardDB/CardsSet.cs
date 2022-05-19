@@ -11,12 +11,20 @@ namespace CardDB
 		
 		public void AddCard(Card card)
 		{
-			card.ID = IDGenerator.Generate();
-			Cards[card.ID] = card;
+			lock (Cards)
+			{
+				Cards[card.ID] = card;
+			}
 		}
 		
 		
 		public void RemoveCard(Card card) => RemoveCard(card.ID);
-		public void RemoveCard(string id) => Cards.Remove(id);
+		public void RemoveCard(string id)
+		{
+			lock (Cards)
+			{
+				Cards.Remove(id);
+			}
+		}
 	}
 }

@@ -4,7 +4,7 @@ namespace CardDB.Updates
 {
 	public class CardUpdate : IUpdate
 	{
-		public long Sequence { get; set; }
+		public ulong Sequence { get; init; }
 		public UpdateTarget TargetType => UpdateTarget.Card;
 		
 		
@@ -14,12 +14,24 @@ namespace CardDB.Updates
 		public Dictionary<string, string> PreviousProperties { get; init; }
 		
 		
-		public static CardUpdate Deleted(Card card)
+		public static CardUpdate Deleted(Action a, Card card)
 		{
 			return new CardUpdate
 			{
+				Sequence = a.Sequence,
 				Card = card,
 				UpdateType = UpdateType.Removed
+			};
+		}
+		
+		public static CardUpdate CardCreated(Action a, Card card)
+		{
+			return new CardUpdate
+			{
+				Sequence = a.Sequence,
+				Card = card,
+				NewProperties = new Dictionary<string, string>(card.Properties),
+				UpdateType = UpdateType.Added
 			};
 		}
 	}

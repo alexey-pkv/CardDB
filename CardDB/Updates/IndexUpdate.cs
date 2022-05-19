@@ -2,7 +2,7 @@ namespace CardDB.Updates
 {
 	public class IndexUpdate : IUpdate
 	{
-		public long Sequence { get; set; }
+		public ulong Sequence { get; init; }
 		public UpdateTarget TargetType => UpdateTarget.Index;
 		
 		
