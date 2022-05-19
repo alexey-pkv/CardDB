@@ -3,9 +3,9 @@ using System;
 
 namespace CardDB
 {
-	public interface IUpdate : IDBEntity
+	public interface IUpdate
 	{
 		public Int64 Sequence { get; set; }
-		public UpdateTarget TargetType { get; set; }
+		public UpdateTarget TargetType { get; }
 	}
 }

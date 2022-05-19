@@ -4,6 +4,6 @@ namespace CardDB
 	{
 		Card,
 		View,
-		Field
+		Index
 	}
 }

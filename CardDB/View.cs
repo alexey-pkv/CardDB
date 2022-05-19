@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CardDB.Updates;
 
 
 namespace CardDB
@@ -7,29 +8,30 @@ namespace CardDB
 	{
 		private Dictionary<string, CardIndex>	m_indexByCardID	= new();
 		private SortedSet<CardIndex>			m_view			= new();
-		private IIndexer						m_indexer		= null;
+		private IIndexer						m_indexer	= null;
 		
 		
 		public int Count => m_view.Count;
+		public bool IsDeleted { get; set; } = false;
 		
 		
-		private IndexAction CardRemoved(CardIndex index)
+		private IndexUpdate CardRemoved(CardIndex index)
 		{
 			m_indexByCardID.Remove(index.CardID);
 			m_view.Remove(index);
 			
-			return IndexAction.Removed(index);
+			return IndexUpdate.Removed(index);
 		}
 		
-		private IndexAction CardAdded(CardIndex index)
+		private IndexUpdate CardAdded(CardIndex index)
 		{
 			m_indexByCardID.Add(index.CardID, index);
 			m_view.Add(index);
 			
-			return IndexAction.Added(index);
+			return IndexUpdate.Added(index);
 		}
 		
-		private IndexAction CardReIndexed(CardIndex prev, CardIndex curr)
+		private IndexUpdate CardReIndexed(CardIndex prev, CardIndex curr)
 		{
 			if (prev.CompareTo(curr) == 0)
 				return null;
@@ -38,7 +40,7 @@ namespace CardDB
 			m_view.Remove(prev);
 			m_view.Add(curr);
 			
-			return IndexAction.ReIndexed(prev, curr);
+			return IndexUpdate.ReIndexed(prev, curr);
 		}
 		
 		
@@ -48,7 +50,7 @@ namespace CardDB
 		}
 		
 		
-		public IndexAction Index(Card c)
+		public IndexUpdate Index(Card c)
 		{
 			m_indexByCardID.TryGetValue(c.ID, out var existingIndex);
 			var newOrderValue = m_indexer.Index(c);
@@ -75,7 +77,7 @@ namespace CardDB
 			return null;
 		}
 		
-		public IndexAction Remove(Card c)
+		public IndexUpdate Remove(Card c)
 		{
 			m_indexByCardID.TryGetValue(c.ID, out var existingIndex);
 			
@@ -94,6 +96,9 @@ namespace CardDB
 
 			foreach (var index in m_view)
 			{
+				if (index.Card.IsDeleted)
+					continue;
+				
 				if (index.CompareTo(after) > 0)
 				{
 					result.Add(index);

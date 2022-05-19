@@ -2,8 +2,10 @@ namespace CardDB
 {
 	public enum ActionType
 	{
-		Added,
-		Removed,
-		ReIndex
+		CreateCard,
+		DeleteCard,
+		ModifyCard,
+		CreateView,
+		DeleteView
 	}
 }
