@@ -6,7 +6,7 @@ namespace CardDB.Engine.Operators.Actions
 {
 	public class ActionConsumer
 	{
-		private Func<bool> m_callback;
+		private Func<Task<bool>> m_callback;
 		
 		private TaskCompletionSource m_waitStop = null;
 		
@@ -22,7 +22,7 @@ namespace CardDB.Engine.Operators.Actions
 			
 			m_blIsRunning = true;
 			
-			Task.Run(Execute);
+			Execute();
 		}
 		
 		private bool IsStopping()
@@ -35,7 +35,7 @@ namespace CardDB.Engine.Operators.Actions
 			return true;
 		}
 		
-		private void Execute()
+		private async void Execute()
 		{
 			lock (this)
 			{
@@ -45,7 +45,7 @@ namespace CardDB.Engine.Operators.Actions
 				m_blIsTainted = false;
 			}
 			
-			var result = m_callback();
+			var result = await m_callback();
 			
 			lock (this)
 			{
@@ -60,7 +60,7 @@ namespace CardDB.Engine.Operators.Actions
 				if (m_blIsTainted)
 				{
 					m_blIsTainted = true;
-					Task.Run(Execute);
+					Execute();
 				}
 				else
 				{
@@ -70,7 +70,7 @@ namespace CardDB.Engine.Operators.Actions
 		}
 		
 		
-		public ActionConsumer(Func<bool> callback)
+		public ActionConsumer(Func<Task<bool>> callback)
 		{
 			m_callback = callback;
 		}

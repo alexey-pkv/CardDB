@@ -24,13 +24,13 @@ namespace CardDB.Engine.Operators
 		
 		#region Private Methods
 		
-		private bool ExecuteNextAction()
+		private async Task<bool> ExecuteNextAction()
 		{
 			var action = m_queue.Peek();
 			
 			if (action != null)
 			{
-				m_executor.Execute(action);
+				await m_executor.Execute(action);
 				m_queue.Pop();
 			}
 			
