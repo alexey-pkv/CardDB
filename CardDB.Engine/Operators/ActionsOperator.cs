@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-
+using CardDB.Engine.Core;
 using CardDB.Engine.StartupData;
 using CardDB.Engine.Operators.Actions;
 
@@ -10,9 +10,9 @@ namespace CardDB.Engine.Operators
 	{
 		#region Private Data Members
 		
-		private ActionsExecutor	m_executor;
-		private ActionConsumer	m_consumer;
-		private ActionsQueue	m_queue = new();
+		private ActionsExecutor		m_executor;
+		private ActionConsumer		m_consumer;
+		private ActionsQueue		m_queue = new();
 		
 		#endregion
 		
@@ -63,6 +63,11 @@ namespace CardDB.Engine.Operators
 		
 		public void AddAction(Action action)
 		{
+			lock (m_queue)
+			{
+				m_queue.AddAction(action);
+			}
+			
 			m_consumer.Tainted();
 		}
 		

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Library.ID;
 
 
@@ -9,6 +10,14 @@ namespace CardDB
 		public Dictionary<string, Card> Cards { get; } = new();
 		
 		
+		public IEnumerable<Card> GetCards()
+		{
+			lock (Cards)
+			{
+				return Cards.Values.ToArray();
+			}
+		}
+
 		public void AddCard(Card card)
 		{
 			lock (Cards)
@@ -16,7 +25,6 @@ namespace CardDB
 				Cards[card.ID] = card;
 			}
 		}
-		
 		
 		public void RemoveCard(Card card) => RemoveCard(card.ID);
 		public void RemoveCard(string id)

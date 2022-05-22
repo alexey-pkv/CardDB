@@ -9,9 +9,8 @@ namespace CardDB.Engine.Operators.Actions
 	public class ActionsQueue
 	{
 		private Queue<Action> m_actions = new();
-
-
-		public IActionPersistence Persistence { get; set; }
+		
+		
 		public ulong LastSequence { get; set; } = 0;
 		public int Count => m_actions.Count;
 		public bool IsEmpty => m_actions.Count == 0;

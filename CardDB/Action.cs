@@ -17,7 +17,6 @@ namespace CardDB
 		
 		public HashSet<string> CardIDs { get; set; } = null;
 		public string ViewID { get; set; } = null;
-		
 		public IIndexer ViewIndex { get; set; }
 		public ICondition UpdateCondition { get; set; }
 			

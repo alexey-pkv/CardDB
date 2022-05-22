@@ -1,29 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using CardDB;
-using CardDB.Structs;
-using Library.ID;
+
 
 namespace ConsoleApplication
 {
 	class Program
 	{
+		static int count = 10;
+		
+		public static async Task DoA()
+		{
+			await Task.Run(() => {});
+		}
+		
 		public static async void Do()
 		{
-			Thread.Sleep(100);
-			// await Task.Delay(100);
-			Console.WriteLine(2);
+			var i = count--;
+			
+			await DoA();
+			
+			if (i > 0)
+			{
+				Console.WriteLine(i);
+				Do();
+				Console.WriteLine(i);
+			}
 		}
 		
 		
 		static void Main(string[] args)
 		{
-			Console.WriteLine(1);
-			Do();
-			Console.WriteLine(3);
-			Thread.Sleep(200);
+			
 		}
 	}
 }

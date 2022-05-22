@@ -14,10 +14,11 @@ namespace CardDB.Updates
 		public CardIndex NewIndex { get; init; } = null;
 		
 		
-		public static IndexUpdate Removed(CardIndex index)
+		public static IndexUpdate Removed(ulong sequence, CardIndex index)
 		{
 			return new IndexUpdate
 			{
+				Sequence = sequence,
 				Card = index.Card,
 				View = index.View,
 				UpdateType = UpdateType.Removed,
@@ -25,10 +26,11 @@ namespace CardDB.Updates
 			};
 		}
 		
-		public static IndexUpdate Added(CardIndex index)
+		public static IndexUpdate Added(ulong sequence, CardIndex index)
 		{
 			return new IndexUpdate
 			{
+				Sequence = sequence,
 				Card = index.Card,
 				View = index.View,
 				UpdateType = UpdateType.Added,
@@ -36,10 +38,11 @@ namespace CardDB.Updates
 			};
 		}
 		
-		public static IndexUpdate ReIndexed(CardIndex prev, CardIndex curr)
+		public static IndexUpdate ReIndexed(ulong sequence, CardIndex prev, CardIndex curr)
 		{
 			return new IndexUpdate
 			{
+				Sequence = sequence,
 				Card = curr.Card,
 				View = curr.View,
 				UpdateType = UpdateType.Modified,

@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CardDB\CardDB.csproj" />
+      <ProjectReference Include="..\Library.Tasks\Library.Tasks.csproj" />
     </ItemGroup>
 
 </Project>

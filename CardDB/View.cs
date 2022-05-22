@@ -15,23 +15,23 @@ namespace CardDB
 		public bool IsDeleted { get; set; } = false;
 		
 		
-		private IndexUpdate CardRemoved(CardIndex index)
+		private IndexUpdate CardRemoved(ulong sequence, CardIndex index)
 		{
 			m_indexByCardID.Remove(index.CardID);
 			m_view.Remove(index);
 			
-			return IndexUpdate.Removed(index);
+			return IndexUpdate.Removed(sequence, index);
 		}
 		
-		private IndexUpdate CardAdded(CardIndex index)
+		private IndexUpdate CardAdded(ulong sequence, CardIndex index)
 		{
 			m_indexByCardID.Add(index.CardID, index);
 			m_view.Add(index);
 			
-			return IndexUpdate.Added(index);
+			return IndexUpdate.Added(sequence, index);
 		}
 		
-		private IndexUpdate CardReIndexed(CardIndex prev, CardIndex curr)
+		private IndexUpdate CardReIndexed(ulong sequence, CardIndex prev, CardIndex curr)
 		{
 			if (prev.CompareTo(curr) == 0)
 				return null;
@@ -40,7 +40,7 @@ namespace CardDB
 			m_view.Remove(prev);
 			m_view.Add(curr);
 			
-			return IndexUpdate.ReIndexed(prev, curr);
+			return IndexUpdate.ReIndexed(sequence, prev, curr);
 		}
 		
 		
@@ -51,7 +51,7 @@ namespace CardDB
 		}
 		
 		
-		public IndexUpdate Index(Card c)
+		public IndexUpdate Index(ulong sequence, Card c)
 		{
 			m_indexByCardID.TryGetValue(c.ID, out var existingIndex);
 			var newOrderValue = m_indexer.Index(c);
@@ -59,17 +59,18 @@ namespace CardDB
 			// New Card
 			if (newOrderValue != null && existingIndex == null)
 			{
-				return CardAdded(new CardIndex { Card = c, View = this, Order = newOrderValue });
+				return CardAdded(sequence, new CardIndex { Card = c, View = this, Order = newOrderValue });
 			}
 			// Removed card
 			else if (newOrderValue == null && existingIndex != null)
 			{
-				return CardRemoved(existingIndex);
+				return CardRemoved(sequence, existingIndex);
 			}
 			// Modified card
 			else if (newOrderValue != null && existingIndex != null)
 			{
 				return CardReIndexed(
+					sequence,
 					existingIndex, 
 					new CardIndex { Card = c, View = this, Order = newOrderValue }
 				);
@@ -78,7 +79,7 @@ namespace CardDB
 			return null;
 		}
 		
-		public IndexUpdate Remove(Card c)
+		public IndexUpdate Remove(ulong sequence, Card c)
 		{
 			m_indexByCardID.TryGetValue(c.ID, out var existingIndex);
 			
@@ -87,7 +88,7 @@ namespace CardDB
 				return null;
 			}
 			
-			return CardRemoved(existingIndex);
+			return CardRemoved(sequence, existingIndex);
 		}
 		
 		

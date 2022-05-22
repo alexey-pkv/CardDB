@@ -5,13 +5,10 @@ namespace CardDB.Engine.StartupData
 {
 	public class ActionsOperatorStartupData
 	{
-		public DB DB { get; set; }
-		public Action[] Actions { get; set; } = null;
-		public ulong LastSequenceID { get; set; } = 0;
-		
-		public IUpdatesConsumer UpdatesConsumer { get; set; }
-		public IActionPersistence Persistence { get; set; }
-		
+		public DB DB { get; init; }
+		public Action[] Actions { get; init; }
+		public ulong LastSequenceID { get; init; }
+		public IUpdatesConsumer UpdatesConsumer { get; init; }
 		
 		public bool HasActions => Actions != null && Actions.Length > 0;
 	}

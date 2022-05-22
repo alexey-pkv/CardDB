@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.CardDB", "Test.CardDB\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{56EA69BB-5E6C-4299-83E7-A7405AA0584E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Tasks", "Library.Tasks\Library.Tasks.csproj", "{75101A5D-BCEF-44EB-83AD-998555B4F89D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56EA69BB-5E6C-4299-83E7-A7405AA0584E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75101A5D-BCEF-44EB-83AD-998555B4F89D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75101A5D-BCEF-44EB-83AD-998555B4F89D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75101A5D-BCEF-44EB-83AD-998555B4F89D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75101A5D-BCEF-44EB-83AD-998555B4F89D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
