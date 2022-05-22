@@ -3,6 +3,7 @@ using CardDB.Engine.Core;
 using CardDB.Engine.Operators;
 using CardDB.Engine.StartupData;
 
+
 namespace CardDB.Engine
 {
 	public class Engine
@@ -17,10 +18,18 @@ namespace CardDB.Engine
 		
 		#endregion
 		
+		#region Properties
+		
+		public DB DB => m_db;
+		
+		#endregion
+		
 		#region Constructor
 		
 		public Engine()
 		{
+			m_persistence = new MemoryActionPersistence();
+			
 			m_indexer.Setup(new ReIndexOperatorStartupData
 			{
 				DB			= m_db,

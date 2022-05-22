@@ -27,7 +27,7 @@ namespace CardDB.Engine.Operators.ReIndex
 			
 			foreach (var view in views)
 			{
-				if (View.IsDeleted)
+				if (view.IsDeleted)
 					break;
 				
 				await IndexDirect(view, Card);

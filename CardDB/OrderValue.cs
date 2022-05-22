@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using CardDB.Exceptions;
+using System.Collections.Generic;
 
 
 namespace CardDB
@@ -111,6 +111,14 @@ namespace CardDB
 				throw new FatalCardDBException(
 					"Unexpected types: " + a.GetType().FullName + " and " + b.GetType().FullName);
 			}
+		}
+		
+		
+		public OrderValue() {}
+		
+		public OrderValue(IEnumerable<object> enumerable)
+		{
+			Value = enumerable.ToArray();
 		}
 		
 		

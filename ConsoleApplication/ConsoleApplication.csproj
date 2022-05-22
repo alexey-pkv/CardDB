@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CardDB.Engine\CardDB.Engine.csproj" />
       <ProjectReference Include="..\CardDB\CardDB.csproj" />
     </ItemGroup>
 

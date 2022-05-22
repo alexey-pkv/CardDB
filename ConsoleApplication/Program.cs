@@ -1,36 +1,44 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CardDB;
+using CardDB.Conditions.ValueConditions;
+using CardDB.Engine;
+using CardDB.Indexing;
 
 
 namespace ConsoleApplication
 {
 	class Program
 	{
-		static int count = 10;
-		
-		public static async Task DoA()
+		static async Task Main(string[] args)
 		{
-			await Task.Run(() => {});
-		}
-		
-		public static async void Do()
-		{
-			var i = count--;
+			Engine e = new Engine();
 			
-			await DoA();
+			e.Start();
 			
-			if (i > 0)
+			var condition = new ContainsValueCondition() { Field = "hello", Value = "world" };
+			var indexer = new StandardIndexer { Condition = condition, OrderProperties = new []{"ord"} };
+			
+			var aView = new Action
 			{
-				Console.WriteLine(i);
-				Do();
-				Console.WriteLine(i);
-			}
-		}
-		
-		
-		static void Main(string[] args)
-		{
+				ActionType = ActionType.CreateView,
+				ViewIndex = indexer
+			};
 			
+			var aCard = new Action
+			{
+				ActionType	= ActionType.CreateCard,
+				Properties	= new()
+				{
+					{ "hello", "world" },
+					{ "good by", "city" },
+				}
+			};
+			
+			await e.AddAction(aView);
+			await e.AddAction(aCard);
+			
+			await Task.Delay(1000000);
 		}
 	}
 }

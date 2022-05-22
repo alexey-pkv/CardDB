@@ -26,29 +26,25 @@ namespace CardDB.Engine.Operators.Actions
 		
 		public void AddAction(Action action)
 		{
-			if (action.Sequence != 0)
-				throw new InvalidOperationException("Only un-sequenced actions should be passed to AddAction");
+			if (action.Sequence == 0)
+				throw new InvalidOperationException("Only sequenced actions should be passed to AddAction");
+			else if (action.Sequence != LastSequence + 1)
+				throw new InvalidOperationException($"Action out of sequence! Waiting for " +
+					$"{LastSequence + 1} but got {action.Sequence}");
+		
+			LastSequence = action.Sequence;
 			
 			lock (m_actions)
 			{
-				LastSequence++;
-				action.Sequence = LastSequence;
-				
 				m_actions.Enqueue(action);
 			}
 		}
 		
 		public void AddActions(IEnumerable<Action> actions)
 		{
-			lock (m_actions)
+			foreach (var action in actions)
 			{
-				if (!IsEmpty)
-					throw new InvalidOperationException("AddActions should be called only on an empty queue");
-
-				foreach (var action in actions)
-				{
-					m_actions.Enqueue(action);
-				}
+				AddAction(action);
 			}
 		}
 		

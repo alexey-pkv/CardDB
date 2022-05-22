@@ -19,7 +19,7 @@ namespace CardDB.Engine.Operators
 		private Queue<IUpdate> m_newViews = new();
 		private Queue<IUpdate> m_cardUpdates = new();
 		
-		private bool m_blIsRunning = false;
+		private bool m_blIsRunning;
 		private Task m_viewUpdateTask;
 		private Task m_cardUpdateTask;
 		
@@ -89,7 +89,7 @@ namespace CardDB.Engine.Operators
 				if (m_cardUpdateTask != null)
 					return;
 				
-				m_cardUpdateTask = IndexCardsAction();
+				m_cardUpdateTask = Task.Run(IndexCardsAction);
 			}
 		}
 		
@@ -108,7 +108,7 @@ namespace CardDB.Engine.Operators
 				if (m_viewUpdateTask != null)
 					return;
 				
-				m_viewUpdateTask = IndexViewAction();
+				m_viewUpdateTask = Task.Run(IndexViewAction);
 			}
 		}
 		
