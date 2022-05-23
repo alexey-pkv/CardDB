@@ -9,7 +9,6 @@ namespace Library
 		public IConfig LoadConfig(string[] args) { return new Config(); }
 		public void InitApp(IConfig config) {}
 		public void ShutdownApp(IConfig config) {}
-
 		public void SetupModules(IModuleContainer container, IConfig config);
 		public Task Run(IModuleContainer container, IConfig config);
 	}
