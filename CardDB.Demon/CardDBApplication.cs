@@ -1,10 +1,13 @@
 using NClap;
 using Library;
 using System.Threading.Tasks;
+
 using CardDB.Modules;
+using CardDB.Modules.DBModule;
+using CardDB.Modules.TestModule;
 using CardDB.Modules.RuntimeModule;
 using CardDB.Modules.SignalsModule;
-using CardDB.Modules.TestModule;
+
 using log4net.Core;
 
 
@@ -65,6 +68,7 @@ namespace CardDB.Demon
 			container.SetModule<ITestModule>(new TestModule());
 			container.SetModule<ISignalsModule>(new SignalsModule());
 			container.SetModule<IRuntimeModule>(new RuntimeModule());
+			container.SetModule<IDBModule>(new DBModule());
 		}
 
 		public Task Run(IModuleContainer container, IConfig config)

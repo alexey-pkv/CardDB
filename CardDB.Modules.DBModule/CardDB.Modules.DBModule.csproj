@@ -5,8 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CardDB.Engine\CardDB.Engine.csproj" />
-      <ProjectReference Include="..\Library\Library.csproj" />
+      <ProjectReference Include="..\CardDB.Modules\CardDB.Modules.csproj" />
     </ItemGroup>
 
 </Project>
