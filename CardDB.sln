@@ -18,6 +18,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Tasks", "Library.Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.API", "CardDB.API\CardDB.API.csproj", "{A995C0BB-438F-499A-A1D1-31CF7542AF4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Modules", "CardDB.Modules\CardDB.Modules.csproj", "{0613A612-A00A-46FC-BE33-1C8C4E68B5DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Demon", "CardDB.Demon\CardDB.Demon.csproj", "{2FA27BCC-04C1-4768-ADBE-73C5AA44F97C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Modules.TestModule", "CardDB.Modules.TestModule\CardDB.Modules.TestModule.csproj", "{67622DD4-8B74-4395-808D-EA41DA001DF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +66,17 @@ Global
 		{A995C0BB-438F-499A-A1D1-31CF7542AF4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A995C0BB-438F-499A-A1D1-31CF7542AF4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A995C0BB-438F-499A-A1D1-31CF7542AF4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0613A612-A00A-46FC-BE33-1C8C4E68B5DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0613A612-A00A-46FC-BE33-1C8C4E68B5DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0613A612-A00A-46FC-BE33-1C8C4E68B5DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0613A612-A00A-46FC-BE33-1C8C4E68B5DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA27BCC-04C1-4768-ADBE-73C5AA44F97C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA27BCC-04C1-4768-ADBE-73C5AA44F97C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA27BCC-04C1-4768-ADBE-73C5AA44F97C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA27BCC-04C1-4768-ADBE-73C5AA44F97C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67622DD4-8B74-4395-808D-EA41DA001DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67622DD4-8B74-4395-808D-EA41DA001DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67622DD4-8B74-4395-808D-EA41DA001DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67622DD4-8B74-4395-808D-EA41DA001DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
