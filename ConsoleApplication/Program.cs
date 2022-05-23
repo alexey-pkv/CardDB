@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using CardDB.API;
-using CardDB.Engine;
 using Library.ID;
 
 
@@ -16,16 +14,6 @@ namespace ConsoleApplication
 			{
 				Console.WriteLine(await IDGenerator.Generate());
 			}
-			
-			return;
-			
-			var API = new APIApp();
-			var engine = new DBEngine();
-			
-			engine.Start();
-			
-			await API.Run(new APIStartupData { Engine = engine }, args);
-			await engine.Stop();
 		}
 	}
 }
