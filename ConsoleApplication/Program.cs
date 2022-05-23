@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
-using CardDB;
-using CardDB.Conditions.ValueConditions;
+
+using CardDB.API;
 using CardDB.Engine;
-using CardDB.Indexing;
+using Library.ID;
 
 
 namespace ConsoleApplication
@@ -12,33 +12,20 @@ namespace ConsoleApplication
 	{
 		static async Task Main(string[] args)
 		{
-			Engine e = new Engine();
-			
-			e.Start();
-			
-			var condition = new ContainsValueCondition() { Field = "hello", Value = "world" };
-			var indexer = new StandardIndexer { Condition = condition, OrderProperties = new []{"ord"} };
-			
-			var aView = new Action
+			for (var i = 0; i < 100; i++)
 			{
-				ActionType = ActionType.CreateView,
-				ViewIndex = indexer
-			};
+				Console.WriteLine(await IDGenerator.Generate());
+			}
 			
-			var aCard = new Action
-			{
-				ActionType	= ActionType.CreateCard,
-				Properties	= new()
-				{
-					{ "hello", "world" },
-					{ "good by", "city" },
-				}
-			};
+			return;
 			
-			await e.AddAction(aView);
-			await e.AddAction(aCard);
+			var API = new APIApp();
+			var engine = new DBEngine();
 			
-			await Task.Delay(1000000);
+			engine.Start();
+			
+			await API.Run(new APIStartupData { Engine = engine }, args);
+			await engine.Stop();
 		}
 	}
 }

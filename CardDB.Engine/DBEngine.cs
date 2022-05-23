@@ -6,7 +6,7 @@ using CardDB.Engine.StartupData;
 
 namespace CardDB.Engine
 {
-	public class Engine
+	public class DBEngine
 	{
 		#region Private Data Members
 		
@@ -26,7 +26,7 @@ namespace CardDB.Engine
 		
 		#region Constructor
 		
-		public Engine()
+		public DBEngine()
 		{
 			m_persistence = new MemoryActionPersistence();
 			

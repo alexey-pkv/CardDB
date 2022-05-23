@@ -1,0 +1,183 @@
+//// IDs
+ 
+All IDs will be in the following format:
+
+11yqy4fculb4
+xwun2etpb90g
+4nfuzv5idb34
+bo1nss6etwf4
+p9phjgvrcrxc
+
+Exactly 12 characters in length. Containing laters a-z, 0-9. Does not include appercase. 
+
+
+
+//// Errors
+{
+    "error": "Error message",
+    "code": 123, // Internal code
+}
+
+
+
+//// Cards
+
+
+GET: /card/{id}
+=====
+{
+    "id": "abc",
+    "fields": 
+    {
+        "Key1": "Value1",
+        "Key2": "Value2",
+        "Key3": "Value3",
+        "Key4": "Value4",
+    }
+}
+
+GET: /card?ids=a,b,c
+=====
+[
+    {
+        "id": "",
+        "fields": 
+        {
+            "Key1": "Value1",
+            "Key2": "Value2",
+            "Key3": "Value3",
+            "Key4": "Value4",
+        }
+    },
+    ....
+]
+
+POST: /card
+{
+    "Key1": "Value1",
+    "Key2": "Value2",
+    "Key3": "Value3",
+    "Key4": "Value4",
+}
+=====
+{
+    "id": "abc",
+    "fields": 
+    {
+        "Key1": "Value1",
+        "Key2": "Value2",
+        "Key3": "Value3",
+        "Key4": "Value4",
+    }
+}
+
+PUT: /card/{id}
+{
+    "Key1": "Value1",
+    "Key2": "Value2",
+    "Key3": "Value3",
+    "Key4": "Value4",
+}
+=====
+{
+    "id": {id},
+    "fields": 
+    {
+        "Key1": "Value1",
+        "Key2": "Value2",
+        "Key3": "Value3",
+        "Key4": "Value4",
+    }
+}
+
+
+
+//// Views
+
+POST: /view
+{
+    "index": // If a card matches the condition in this index, it will appear in this view.
+    {
+        "type": "and",
+        "conditions": 
+        [
+            {
+                "type": "or",
+                "conditions": [ .... any of the conditions may match .... ]
+            },
+            {
+                "type": "not",
+                "condition": { "type": ... /* NOT will revert the the result of this condition */ }
+            },
+            {
+                "type": "equals",
+                "field": "{field name to match}",
+                "value": "{value the field mast match}"
+            },
+            {
+                "type": "regex",
+                "field": "{field name that must exist}",
+                "regex": "/.../" // The regex string to match.
+            },
+            {
+                "type": "exists",
+                "field": "{field name that must exist}"
+            }
+        ]
+    },
+    "order": 
+    /* the order of the cards in this view. Can be empty, in this case cards are ordered by there ID */
+    /* cards are always ordered by ID if the index values match. */ 
+    [
+        "key1",
+        "key2",
+        "key3",
+        ....
+    ]
+}
+=====
+201
+{
+    "id": {id},
+    "condition": 
+    {
+        /* ... */
+    }
+}
+
+GET: /view/{id}
+=====
+{
+    "id": {id},
+    "condition": 
+    {
+        /* ... */
+    }
+}
+
+DELETE: /view/{id}
+====
+201
+{"id": "...."}
+
+
+
+GET: /view/{id}/cards?after=[....]&count=100
+after - optional. If set to a value, only cards following the passed order will be returned. 
+    When going through paginated result set, this should be the "order" value of the last cards returned by
+    this endpoint
+====
+[
+    {
+        "id": "",
+        "order": [....],
+        "fields": 
+        {
+            "Key1": "Value1",
+            "Key2": "Value2",
+            "Key3": "Value3",
+            "Key4": "Value4",
+        }
+    },
+    ....
+]
