@@ -3,6 +3,7 @@ using Library;
 using System.Threading.Tasks;
 
 using CardDB.Modules;
+using CardDB.Modules.APIModule;
 using CardDB.Modules.DBModule;
 using CardDB.Modules.TestModule;
 using CardDB.Modules.RuntimeModule;
@@ -69,6 +70,7 @@ namespace CardDB.Demon
 			container.SetModule<ISignalsModule>(new SignalsModule());
 			container.SetModule<IRuntimeModule>(new RuntimeModule());
 			container.SetModule<IDBModule>(new DBModule());
+			container.SetModule<IAPIModule>(new APIModule());
 		}
 
 		public Task Run(IModuleContainer container, IConfig config)

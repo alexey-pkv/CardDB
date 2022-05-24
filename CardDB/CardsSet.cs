@@ -8,6 +8,7 @@ namespace CardDB
 	public class CardsSet
 	{
 		public Dictionary<string, Card> Cards { get; } = new();
+		public int Count => Cards.Count;
 		
 		
 		public IEnumerable<Card> GetCards()

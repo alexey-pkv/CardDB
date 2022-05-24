@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CardDB.Modules\CardDB.Modules.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Watson" Version="4.2.2.13" />
+    </ItemGroup>
+
+</Project>

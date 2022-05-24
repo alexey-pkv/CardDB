@@ -6,6 +6,7 @@ namespace CardDB
 	public class ViewsSet
 	{
 		public Dictionary<string, View> Views { get; } = new();
+		public int Count => Views.Count;
 		
 		
 		public IEnumerable<View> GetViews()

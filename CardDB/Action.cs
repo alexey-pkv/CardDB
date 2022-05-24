@@ -12,6 +12,7 @@ namespace CardDB
 		public ActionType ActionType { get; set; }
 		
 		
+		public string GeneratedID { get; set; } = null;
 		public Dictionary<string, string> Properties { get; set; } = null;
 		public HashSet<string> DeletedProperties { get; set; } = null;
 		
@@ -116,7 +117,7 @@ namespace CardDB
 		
 		public async Task<CardUpdate> CreateCard()
 		{
-			Card c = new(await IDGenerator.Generate());
+			Card c = new(GeneratedID ?? await IDGenerator.Generate());
 
 			foreach (var kvp in Properties)
 			{
