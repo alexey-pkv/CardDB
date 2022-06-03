@@ -31,28 +31,48 @@ namespace CardDB.Modules.APIModule.Utils
 			return val;
 		}
 		
-		public static async Task<CreateCardModel> GetCreateCard(this HttpContext ctx)
+		public static async Task<JsonElement> ReadJSON(this HttpContext ctx)
+		{
+			return await ReadJSONBody<JsonElement>(ctx);
+		}
+		
+		public static async Task<T> TryReadJSONBody<T>(this HttpContext ctx, T def = default)
+		{
+			try
+			{
+				return await ctx.ReadJSONBody<T>();
+			}
+			catch (JsonException e)
+			{
+				Log.Fatal("Failed to parse to JSON body", e);
+				return def;
+			}
+		}
+		
+		public static async Task<T> ReadJSONBody<T>(this HttpContext ctx)
 		{
 			StreamReader reader = new StreamReader(ctx.Request.Data, Encoding.UTF8, true, 1024, true);
-            var body = await reader.ReadToEndAsync();
-            Dictionary<string, string> props;
-
-            try
-            {
-				props = JSON.Deserialize<Dictionary<string, string>>(body);
-            }
-            catch (JsonException e)
-            {
-	            return null;
-            }
-            
-            if (props.Count > 1000)
-	            return null;
-            
-            return new CreateCardModel
-            {
-	            properties = props
-            };
+			var body = await reader.ReadToEndAsync();
+			
+			return JSON.Deserialize<T>(body);
+		}
+		
+		public static async Task<CreateCardModel> GetCreateCard(this HttpContext ctx)
+		{
+			Dictionary<string, string> props = await ReadJSONBody<Dictionary<string, string>>(ctx);
+			
+			if (props.Count > 1000)
+				return null;
+			
+			return new CreateCardModel
+			{
+				properties = props
+			};
+		}
+		
+		public static async Task<CreateViewModel> GetCreateView(this HttpContext ctx)
+		{
+			return await ReadJSONBody<CreateViewModel>(ctx);
 		}
 	}
 }

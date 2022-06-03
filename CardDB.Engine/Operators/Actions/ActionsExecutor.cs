@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CardDB.Updates;
 using CardDB.Engine.Core;
 
+using Library;
 using Library.ID;
 
 
@@ -29,7 +30,7 @@ namespace CardDB.Engine.Operators.Actions
 		private async void ExecuteCreateView(Action a)
 		{
 			View v = new View(
-				await IDGenerator.Generate(),
+				a.GeneratedID ?? await IDGenerator.Generate(),
 				a.ViewIndex
 			);
 			
@@ -71,7 +72,7 @@ namespace CardDB.Engine.Operators.Actions
 		}
 		
 		
-		public async Task Execute(Action a)
+		public async Task ExecuteUnsafe(Action a)
 		{
 			switch (a.ActionType)
 			{
@@ -94,6 +95,18 @@ namespace CardDB.Engine.Operators.Actions
 				
 				default:
 					throw new InvalidOperationException($"Missing action for {a.ActionType}");
+			}
+		}
+		
+		public async Task Execute(Action a)
+		{
+			try
+			{
+				await ExecuteUnsafe(a);
+			}
+			catch (Exception e)
+			{
+				Log.Fatal($"Failed to execute action {a}!", e);
 			}
 		}
 		

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using IniParser;
+using Library;
 using Library.ID;
 
 
@@ -10,10 +13,7 @@ namespace ConsoleApplication
 	{
 		static async Task Main(string[] args)
 		{
-			for (var i = 0; i < 100; i++)
-			{
-				Console.WriteLine(await IDGenerator.Generate());
-			}
+			
 		}
 	}
 }

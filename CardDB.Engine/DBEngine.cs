@@ -33,14 +33,14 @@ namespace CardDB.Engine
 			m_indexer.Setup(new ReIndexOperatorStartupData
 			{
 				DB			= m_db,
-				Consumer	= null,
+				Consumer	= new LogConsumer(null),
 			});
 			
 			m_actions.Setup(new ActionsOperatorStartupData
 			{
 				DB				= m_db,
 				Actions			= null,
-				UpdatesConsumer	= m_indexer,
+				UpdatesConsumer	= new LogConsumer(m_indexer),
 				LastSequenceID	= 0
 			});
 		}

@@ -16,11 +16,15 @@ namespace CardDB.Modules.APIModule
 		
 		public override void Load(IStateManager state)
 		{
-			m_server = new Server(
-				Config["server.host"].Get(),
-				Config["server.port"].GetInt());
+			var host = Config["server.host"].Get();
+			var port = Config["server.port"].GetInt();
+			
+			
+			m_server = new Server(host, port);
 			
 			m_server.StartAsync();
+			
+			Log.Info($"[APIModule] Running on {host}:{port}");
 		}
 
 		public override void PreStop(IStateManager state)

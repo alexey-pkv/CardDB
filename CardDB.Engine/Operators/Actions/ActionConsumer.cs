@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 
+using Library;
+
 
 namespace CardDB.Engine.Operators.Actions
 {
@@ -45,7 +47,17 @@ namespace CardDB.Engine.Operators.Actions
 				m_blIsTainted = false;
 			}
 			
-			var result = await m_callback();
+			bool result;
+
+			try
+			{
+				result = await m_callback();
+			}
+			catch (Exception e)
+			{
+				Log.Error("Failed to execute callback!", e);
+				throw;
+			}
 			
 			lock (this)
 			{

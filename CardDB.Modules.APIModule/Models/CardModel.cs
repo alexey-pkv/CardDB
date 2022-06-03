@@ -5,8 +5,8 @@ namespace CardDB.Modules.APIModule.Models
 {
 	public class CardModel
 	{
-		public string id { get; set; }
-		public Dictionary<string, string> properties { get; set; }
+		public string id { get; }
+		public Dictionary<string, string> properties { get; }
 		
 		
 		public CardModel(Card c)
