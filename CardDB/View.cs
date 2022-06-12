@@ -105,7 +105,7 @@ namespace CardDB
 				{
 					result.Add(index);
 					
-					if (count >= result.Count)
+					if (count <= result.Count)
 					{
 						break;
 					}

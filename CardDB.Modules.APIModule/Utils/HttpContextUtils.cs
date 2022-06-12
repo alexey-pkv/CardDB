@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using CardDB.Modules.APIModule.Models;
 using Library;
 using WatsonWebserver;
@@ -13,8 +14,56 @@ namespace CardDB.Modules.APIModule.Utils
 {
 	public static class HttpContextUtils
 	{
-		private static readonly Regex ID_REGEX = new Regex("^[a-z0-9]{12}$");
+		private static readonly Regex ID_REGEX = new("^[a-z0-9]{12}$");
 		
+		
+		public static View GetView(this HttpContext ctx, string param = "id")
+		{
+			var id = ctx.GetID(param);
+			
+			if (id == null)
+			{
+				return null;
+			}
+			
+			var module = Container.GetModule<IDBModule>();
+			
+			return module.Engine.TryGetView(id, out var view) ? view : null;
+		}
+		
+		
+		public static string GetStringParam(this HttpContext ctx, string param = "id", string def = null)
+		{
+			if (!ctx.Request.Query.Elements.TryGetValue(param, out var val))
+			{
+				return def;
+			}
+			
+			val = HttpUtility.UrlDecode(val);
+			
+			return val;
+		}
+		
+		public static int GetIntParam(this HttpContext ctx, string param = "id", 
+			int min = int.MinValue, int max = int.MaxValue, int def = 0)
+		{
+			if (!ctx.Request.Query.Elements.TryGetValue(param, out var val))
+			{
+				return def;
+			}
+			
+			if (!int.TryParse(val, out var int_val))
+			{
+				return def;
+			}
+			
+			if (int_val < min || int_val > max)
+			{
+				return def;
+			}
+			
+			return int_val;
+		}
 		
 		public static string GetID(this HttpContext ctx, string param = "id", string def = null)
 		{

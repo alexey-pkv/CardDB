@@ -79,6 +79,11 @@ namespace CardDB.Engine
 			);
 		}
 		
+		public bool TryGetView(string id, out View view)
+		{
+			return DB.Views.Views.TryGetValue(id, out view);
+		}
+		
 		#endregion
 	}
 }
