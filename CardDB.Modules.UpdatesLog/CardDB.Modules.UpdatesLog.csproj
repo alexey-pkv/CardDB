@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CardDB.Modules\CardDB.Modules.csproj" />
+      <ProjectReference Include="..\CardDB\CardDB.csproj" />
+      <ProjectReference Include="..\Library.ID\Library.ID.csproj" />
+      <ProjectReference Include="..\Library.Tasks\Library.Tasks.csproj" />
+      <ProjectReference Include="..\Library\Library.csproj" />
+    </ItemGroup>
+
+</Project>
