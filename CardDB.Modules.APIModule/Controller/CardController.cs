@@ -16,6 +16,7 @@ namespace CardDB.Modules.APIModule.Controller
 		public static async Task GetCard(HttpContext ctx)
 		{
 			var id = ctx.GetID();
+			var latest = ctx.GetBoolParam("latest");
 			
 			if (id == null)
 			{
@@ -30,6 +31,11 @@ namespace CardDB.Modules.APIModule.Controller
 			{
 				await ctx.Response.WithNotFound();
 				return;
+			}
+			
+			if (latest)
+			{
+				module.Engine.ForceUpdate(c);
 			}
 			
 			await ctx.Response.WithJSON(new CardModel(c));

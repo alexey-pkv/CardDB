@@ -44,6 +44,13 @@ namespace CardDB.Modules.APIModule.Utils
 			return val;
 		}
 		
+		public static bool GetBoolParam(this HttpContext ctx, string param, bool def = false)
+		{
+			var res = ctx.GetIntParam(param, def: def ? 1 : 0);
+			
+			return (res == 0 ? false : true);
+		}
+		
 		public static int GetIntParam(this HttpContext ctx, string param = "id", 
 			int min = int.MinValue, int max = int.MaxValue, int def = 0)
 		{

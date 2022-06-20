@@ -69,7 +69,7 @@ namespace CardDB.Engine.Operators
 
 				lock (m_newViews)
 				{
-					if (!m_blIsRunning || !m_cardUpdates.TryDequeue(out update))
+					if (!m_blIsRunning || !m_newViews.TryDequeue(out update))
 					{
 						m_viewUpdateTask = null;
 						return;
