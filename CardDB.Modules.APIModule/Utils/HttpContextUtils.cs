@@ -67,7 +67,8 @@ namespace CardDB.Modules.APIModule.Utils
 		
 		public static string GetID(this HttpContext ctx, string param = "id", string def = null)
 		{
-			if (!ctx.Request.Url.Parameters.TryGetValue(param, out var val))
+			if (!ctx.Request.Url.Parameters.TryGetValue(param, out var val) && 
+			    !ctx.Request.Query.Elements.TryGetValue(param, out val))
 			{
 				return def;
 			}

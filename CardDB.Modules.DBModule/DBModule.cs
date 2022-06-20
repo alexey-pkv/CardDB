@@ -1,6 +1,7 @@
 ﻿using Library;
-using CardDB.Engine;
 using Library.State;
+
+using CardDB.Engine;
 
 
 namespace CardDB.Modules.DBModule
@@ -9,11 +10,13 @@ namespace CardDB.Modules.DBModule
 	{
 		public override string Name => "DB";
 		public DBEngine Engine { get; } = new ();
+		
 
-
-		public override void Init()
+		public override void PreLoad(IStateManager state)
 		{
-			Engine.Start();
+			var logs = GetModule<IUpdatesLogModule>();
+			
+			Engine.Start(logs);
 		}
 
 		public override void PreStop(IStateManager state)

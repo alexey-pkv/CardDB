@@ -4,8 +4,8 @@ namespace CardDB.Modules.UpdatesLog
 	{
 		public string After { get; set; } = null;
 		public string Before { get; set; } = null;
-		public BoundaryType FromBoundary { get; set; } = BoundaryType.Exclusive;
-		public BoundaryType ToBoundary { get; set; } = BoundaryType.Exclusive;
+		public BoundaryType AfterBoundary { get; set; } = BoundaryType.Exclusive;
+		public BoundaryType BeforeBoundary { get; set; } = BoundaryType.Exclusive;
 		public bool IsAscending { get; set; } = true;
 		public string ViewFilter { get; set; } = null;
 		public string CardFilter { get; set; } = null;

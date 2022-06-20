@@ -11,6 +11,7 @@
       <ProjectReference Include="..\CardDB.Modules.RuntimeModule\CardDB.Modules.RuntimeModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.SignalsModule\CardDB.Modules.SignalsModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.TestModule\CardDB.Modules.TestModule.csproj" />
+      <ProjectReference Include="..\CardDB.Modules.UpdatesLog\CardDB.Modules.UpdatesLog.csproj" />
       <ProjectReference Include="..\CardDB.Modules\CardDB.Modules.csproj" />
       <ProjectReference Include="..\Library\Library.csproj" />
     </ItemGroup>

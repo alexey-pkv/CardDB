@@ -8,9 +8,9 @@ namespace CardDB.Modules
 {
 	public interface IUpdatesLogModule : IUpdatesConsumer, IModule
 	{
-		public IUpdateLog Get(string id);
-		public IEnumerable<IUpdateLog> GetAfter(string id, int count);
-		public IEnumerable<IUpdateLog> GetBetween(string id, string before, int count);
-		public IEnumerable<IUpdateLog> Query(UpdatesLogQuery query);
+		public UpdateLog Get(string id);
+		public IEnumerable<UpdateLog> GetAfter(string id, int count);
+		public IEnumerable<UpdateLog> GetBetween(string id, string before, int count);
+		public IEnumerable<UpdateLog> Query(UpdatesLogQuery query);
 	}
 }

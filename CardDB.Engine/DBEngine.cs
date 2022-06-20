@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+
 using CardDB.Engine.Core;
 using CardDB.Engine.Operators;
 using CardDB.Engine.StartupData;
@@ -10,12 +11,12 @@ namespace CardDB.Engine
 	{
 		#region Private Data Members
 		
-		private IActionPersistence m_persistence = null;
+		private IActionPersistence m_persistence;
 		
 		private DB m_db = new();
 		private ActionsOperator m_actions = new();
 		private ReIndexOperator m_indexer = new();
-		
+
 		#endregion
 		
 		#region Properties
@@ -24,24 +25,28 @@ namespace CardDB.Engine
 		
 		#endregion
 		
-		#region Constructor
+		#region Private Methods
 		
-		public DBEngine()
+		private void Init(IUpdatesConsumer logs)
 		{
 			m_persistence = new MemoryActionPersistence();
-			
+						
 			m_indexer.Setup(new ReIndexOperatorStartupData
 			{
 				DB			= m_db,
-				Consumer	= new LogConsumer(null),
+				Consumer	= logs
 			});
 			
 			m_actions.Setup(new ActionsOperatorStartupData
 			{
 				DB				= m_db,
 				Actions			= null,
-				UpdatesConsumer	= new LogConsumer(m_indexer),
-				LastSequenceID	= 0
+				LastSequenceID	= 0,
+				UpdatesConsumer	= new ConsumersCollection(new []
+				{
+					logs,
+					m_indexer
+				})
 			});
 		}
 		
@@ -65,8 +70,10 @@ namespace CardDB.Engine
 			await m_indexer.Index(c, v);
 		}
 		
-		public void Start()
+		public void Start(IUpdatesConsumer log)
 		{
+			Init(log);
+			
 			m_indexer.Start();
 			m_actions.StartConsumer();
 		}
