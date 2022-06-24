@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CardDB.Updates;
 
 
@@ -5,21 +6,27 @@ namespace CardDB.Modules.APIModule.Models.Updates
 {
 	public class UpdateLogModel
 	{
-		public string ID { get; set; }
-		public CardUpdateModel CardUpdate { get; }
-		public ViewUpdateModel ViewUpdate { get; }
-		public IndexUpdateModel IndexUpdate { get; }
+		public string id { get; set; }
+		
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public CardUpdateModel cardUpdate { get; }
+		
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public ViewUpdateModel viewUpdate { get; }
+		
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public IndexUpdateModel indexUpdate { get; }
 		
 		
 		public UpdateLogModel(UpdateLog updateLog)
 		{
-			ID = updateLog.RecordID;
+			id = updateLog.RecordID;
 			
 			var update = updateLog.Update;
 			
-			if (update is CardUpdate) CardUpdate = new CardUpdateModel(update);
-			else if (update is ViewUpdate) ViewUpdate = new ViewUpdateModel(update);
-			else if (update is IndexUpdate) IndexUpdate = new IndexUpdateModel(update);
+			if (update is CardUpdate) cardUpdate = new CardUpdateModel(update);
+			else if (update is ViewUpdate) viewUpdate = new ViewUpdateModel(update);
+			else if (update is IndexUpdate) indexUpdate = new IndexUpdateModel(update);
 		}
 	}
 }

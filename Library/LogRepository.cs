@@ -35,7 +35,7 @@ namespace Library
 		
 		private static ConsoleAppender GetConsoleAppender()
 		{
-			var consoleAppender = new ConsoleAppender
+			var consoleAppender = new ThreadSafeConsoleAppender
 			{
 				Layout = GetLogPattern()
 			};

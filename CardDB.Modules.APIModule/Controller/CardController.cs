@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using CardDB.Modules.APIModule.Models;
@@ -38,6 +39,12 @@ namespace CardDB.Modules.APIModule.Controller
 				module.Engine.ForceUpdate(c);
 			}
 			
+			if (c.IsDeleted)
+			{
+				await ctx.Response.WithNotFound();
+				return;
+			}
+			
 			await ctx.Response.WithJSON(new CardModel(c));
 		}
 		
@@ -63,6 +70,29 @@ namespace CardDB.Modules.APIModule.Controller
 			});
 			
 			await ctx.Response.WithID(id);
+		}
+		
+		[ParameterRoute(HttpMethod.DELETE, "/card/{id}")]
+		public static async Task DeleteCard(HttpContext ctx)
+		{
+			var id = ctx.GetID();
+			
+			if (id == null)
+			{
+				await ctx.Response.WithInvalidParameter("id");
+				return;
+			}
+			
+			var module = Container.GetModule<IDBModule>();
+			var db = module.Engine.DB;
+			
+			await module.Engine.AddAction(new Action
+			{
+				CardIDs = new HashSet<string>(new [] { id }),
+				ActionType = ActionType.DeleteCard,
+			});
+			
+			await ctx.Response.WithOK();
 		}
 	}
 }

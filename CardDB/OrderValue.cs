@@ -114,7 +114,7 @@ namespace CardDB
 		}
 		
 		
-		public OrderValue() {}
+		public OrderValue() { Value = Array.Empty<object>(); }
 		
 		public OrderValue(IEnumerable<object> enumerable)
 		{

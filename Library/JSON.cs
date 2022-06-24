@@ -18,6 +18,7 @@ namespace Library
 		{
 			m_options.Converters.Add(new DateTimeConverter());
 			m_options.Converters.Add(new IPConverter());
+			m_options.IgnoreNullValues = true;
 			
 			
 			var type = typeof(IAutoloadCacaoJSONConverter);

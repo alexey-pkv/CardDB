@@ -1,0 +1,101 @@
+####################
+### Create a card with fields hello = "world" and "order" = "133"
+### Response:
+###		{"id":"wcq9dzt0qfj3"}
+####################
+POST http://localhost:7373/card
+Accept: application/json
+
+{
+	"hello": "world",
+	"order": "133"
+}
+
+####################
+### Get a card by ID "wcq9dzt0qfj3"
+### Response:
+###		{"id":"wcq9dzt0qfj3","properties":{"hello":"world","order":"133"}}
+####################
+GET http://localhost:7373/card/vvo7ukonv08k
+Accept: application/json
+
+####################
+### Delete a card
+####################
+
+DELETE http://localhost:7373/card/hss9fzckq7bm
+Accept: application/json
+
+####################
+### Create a View
+### The view will contain only cards with a field "index-me" and order using the "hello" field
+### Response:
+###		{"id":"ukh4d03ecg8a"}
+####################
+POST http://localhost:7373/view
+Accept: application/json
+
+{
+    "index":
+    {
+        "type": "exists",
+        "field": "index-me"
+    },
+    "order": 
+    [
+        "hello"
+    ]
+}
+
+####################
+### Create cards with field index-me and one without (Run a few times with different "hello" to see how order works.
+####################
+POST http://localhost:7373/card
+Accept: application/json
+
+{
+    "hello": "world",
+	"index-me": "please"
+}
+
+###
+
+POST http://localhost:7373/card
+Accept: application/json
+
+{
+    "hello": "world"
+}
+
+####################
+### Query View 
+### The view will contain only cards with a field "index-me"
+### Response:
+###		{"cards":[{"card":{"id":"s93h0trybqbg","properties":{"hello":"hello","index-me":"please"}},"order":["hello","s93h0trybqbg"]},{"card":{"id":"tta3k153asxu","properties":{"hello":"hello","index-me":"please"}},"order":["hello","tta3k153asxu"]}]}
+###
+### Params
+### - count - max items to return.
+### - after - the last order after which to return the cards. In this example after should be `after=["hello","tta3k153asxu"]` -> this is the value of the "order" field of the last returned card 
+####################
+GET http://localhost:7373/view/fr54u4rvzabq/cards?count=2
+Accept: application/json
+
+
+####################
+### Get latest changes
+### Response:
+###		{"updates":[{"ID":"000000000000","CardUpdate":null,"ViewUpdate":{"sequence":1,"target":1,"viewId":"qsy1i9zt5scf","updateType":0},"IndexUpdate":null},{"ID":"000000000001","CardUpdate":null,"ViewUpdate":{"sequence":2,"target":1,"viewId":"2epwj1rb863o","updateType":0},"IndexUpdate":null}]}
+### Params
+### - count - max items to return.
+### - after - return after this record
+### - before - return before this record
+### - afterExclusive - if set to 0 (Def 1), return everytign including and after `after` value
+### - beforeExclusive - if set to 0 (Def 1), return everytign including and before `before` value
+### - descending - if set to 1, retunr in descending order
+### - card - return only changes that affected the given card by it's ID
+### - view - return only changes that affected the given view by it's ID
+####################
+GET http://localhost:7373/updates?count=100
+Accept: application/json
+
+

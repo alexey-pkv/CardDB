@@ -68,7 +68,7 @@ namespace CardDB.Modules.UpdatesLog
 				var compare = String.CompareOrdinal(log.RecordID, query.Before);
 				
 				if (compare > 0 || 
-				    (compare == 0 && query.AfterBoundary == BoundaryType.Exclusive))
+				    (compare == 0 && query.BeforeBoundary == BoundaryType.Exclusive))
 				{
 					return 1;
 				}
@@ -108,7 +108,7 @@ namespace CardDB.Modules.UpdatesLog
 				return ((ViewUpdate)update).View.ID == query.ViewFilter;
 			}
 			
-			return true;
+			return false;
 		}
 		
 		

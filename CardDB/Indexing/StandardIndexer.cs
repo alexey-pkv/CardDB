@@ -14,6 +14,9 @@ namespace CardDB.Indexing
 			if (!Condition.IsMatching(card))
 				return null;
 			
+			if (OrderProperties is null)
+				return new OrderValue();
+			
 			List<object> orderList = new(OrderProperties.Length);
 
 			foreach (var propertyName in OrderProperties)

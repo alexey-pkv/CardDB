@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using CardDB.Updates;
 
 
@@ -11,7 +12,11 @@ namespace CardDB.Modules.APIModule.Models.Updates
 		
 		public string cardId { get; }
 		public UpdateType updateType { get; }
+		
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public Dictionary<string, string> newProperties { get; }
+		
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public Dictionary<string, string> previousProperties { get; }
 		
 		
@@ -23,8 +28,11 @@ namespace CardDB.Modules.APIModule.Models.Updates
 			updateType = cu.UpdateType;
 			cardId = cu.Card.ID;
 			
-			newProperties = cu.NewProperties;
-			previousProperties = cu.PreviousProperties;
+			if (cu.NewProperties != null && cu.NewProperties.Count > 0)
+				newProperties = cu.NewProperties;
+			
+			if (cu.PreviousProperties != null && cu.PreviousProperties.Count > 0)
+				previousProperties = cu.PreviousProperties;
 		}
 	}
 }
