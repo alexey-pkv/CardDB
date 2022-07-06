@@ -20,7 +20,7 @@ namespace CardDB
 		public string ViewID { get; set; } = null;
 		public IIndexer ViewIndex { get; set; }
 		public ICondition UpdateCondition { get; set; }
-			
+		
 		
 		private CardUpdate ApplyDeleteCard(Card c)
 		{

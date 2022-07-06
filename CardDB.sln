@@ -32,6 +32,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Modules.APIModule", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Modules.UpdatesLog", "CardDB.Modules.UpdatesLog\CardDB.Modules.UpdatesLog.csproj", "{6BE539E4-9414-45E8-AB31-FBCDAD8A42C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.Modules.PersistenceModule", "CardDB.Modules.PersistenceModule\CardDB.Modules.PersistenceModule.csproj", "{8EFF305C-1C2C-40EC-B1BF-F42EC3E03198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardDB.MySQL", "CardDB.MySQL\CardDB.MySQL.csproj", "{1D7223B0-7B02-47EF-A567-AEDCEE29A63C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,5 +106,13 @@ Global
 		{6BE539E4-9414-45E8-AB31-FBCDAD8A42C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE539E4-9414-45E8-AB31-FBCDAD8A42C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE539E4-9414-45E8-AB31-FBCDAD8A42C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EFF305C-1C2C-40EC-B1BF-F42EC3E03198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EFF305C-1C2C-40EC-B1BF-F42EC3E03198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EFF305C-1C2C-40EC-B1BF-F42EC3E03198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EFF305C-1C2C-40EC-B1BF-F42EC3E03198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7223B0-7B02-47EF-A567-AEDCEE29A63C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7223B0-7B02-47EF-A567-AEDCEE29A63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7223B0-7B02-47EF-A567-AEDCEE29A63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7223B0-7B02-47EF-A567-AEDCEE29A63C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

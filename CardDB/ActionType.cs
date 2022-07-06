@@ -6,6 +6,7 @@ namespace CardDB
 		DeleteCard,
 		ModifyCard,
 		CreateView,
+		ModifyView,
 		DeleteView
 	}
 }

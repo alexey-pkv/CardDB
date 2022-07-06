@@ -6,10 +6,10 @@ namespace Library.State
 	public class StateToken : IStateToken
 	{
 		private bool m_isCalled;
-		private Action m_callback;
+		private Action<Exception> m_callback;
 		
 		
-		public StateToken(Action callback)
+		public StateToken(Action<Exception> callback)
 		{
 			m_isCalled = false;
 			m_callback = callback;
@@ -26,7 +26,20 @@ namespace Library.State
 				m_isCalled = true;
 			}
 			
-			m_callback();
+			m_callback(null);
+		}
+		
+		public void Fail(Exception e)
+		{
+			lock (this)
+			{
+				if (m_isCalled) 
+					return;
+				
+				m_isCalled = true;
+			}
+			
+			m_callback(e);
 		}
 	}
 }

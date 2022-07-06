@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MySql.Data" Version="8.0.29" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CardDB.Modules\CardDB.Modules.csproj" />
+      <ProjectReference Include="..\CardDB.MySQL\CardDB.MySQL.csproj" />
+      <ProjectReference Include="..\CardDB\CardDB.csproj" />
+    </ItemGroup>
+
+</Project>

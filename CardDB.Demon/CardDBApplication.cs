@@ -9,6 +9,7 @@ using CardDB.Modules.TestModule;
 using CardDB.Modules.UpdatesLog;
 using CardDB.Modules.RuntimeModule;
 using CardDB.Modules.SignalsModule;
+using CardDB.Modules.PersistenceModule;
 
 using log4net.Core;
 
@@ -73,6 +74,7 @@ namespace CardDB.Demon
 			container.SetModule<IDBModule>(new DBModule());
 			container.SetModule<IAPIModule>(new APIModule());
 			container.SetModule<IUpdatesLogModule>(new UpdatesLogModule());
+			container.SetModule<IPersistenceModule>(new PersistenceModule());
 		}
 
 		public Task Run(IModuleContainer container, IConfig config)

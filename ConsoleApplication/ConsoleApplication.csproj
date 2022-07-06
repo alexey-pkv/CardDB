@@ -13,12 +13,14 @@
       <ProjectReference Include="..\CardDB.Modules.SignalsModule\CardDB.Modules.SignalsModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.TestModule\CardDB.Modules.TestModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules\CardDB.Modules.csproj" />
+      <ProjectReference Include="..\CardDB.MySQL\CardDB.MySQL.csproj" />
       <ProjectReference Include="..\CardDB.Protocol\CardDB.Protocol.csproj" />
       <ProjectReference Include="..\CardDB\CardDB.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="ini-parser" Version="2.5.2" />
+      <PackageReference Include="MySql.Data" Version="8.0.29" />
     </ItemGroup>
 
 </Project>

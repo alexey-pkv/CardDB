@@ -13,23 +13,39 @@ namespace Library.State
 		
 		private IModule m_currentModule;
 		private List<IModule> m_pendingModules = new();
+		private Exception m_moduleError = null;
 		
 		
-		private void OnComplete(IModule module, ApplicationState state)
+		private void OnComplete(IModule module, ApplicationState state, Exception e)
 		{
 			lock (this)
 			{
+				if (m_moduleError != null)
+					return;
+				
 				if (m_currentState != state)
 					return;
 				
 				if (!m_pendingModules.Remove(module))
 					return;
 				
-				Log.Info($"{m_currentState}: Module {module.Name} done");
+				m_moduleError = e;
 				
-				if (m_pendingModules.Count == 0)
+				if (e != null)
 				{
+					m_moduleError = e;
+					Log.Info($"{m_currentState}: Module {module.Name} Failed! Aborting...", e);
+					
 					m_waiter.Set();
+				}
+				else
+				{
+					Log.Info($"{m_currentState}: Module {module.Name} done");
+					
+					if (m_pendingModules.Count == 0)
+					{
+						m_waiter.Set();
+					}
 				}
 			}
 		}
@@ -72,9 +88,9 @@ namespace Library.State
 			
 			m_currentModule = null;
 			
-			return new StateToken(() =>
+			return new StateToken(e =>
 			{
-				OnComplete(module, state);
+				OnComplete(module, state, e);
 			});
 		}
 		
@@ -122,12 +138,19 @@ namespace Library.State
 			
 			if (m_waiter.WaitOne((int)(timeout * 1000)))
 			{
+				if (m_moduleError != null)
+					throw m_moduleError;
+				
 				return;
 			}
 			
 			lock (this)
 			{
-				if (m_pendingModules.Count != 0)
+				if (m_moduleError != null)
+				{
+					throw m_moduleError;
+				}
+				else if (m_pendingModules.Count != 0)
 				{
 					var modules = m_pendingModules.ToArray();
 					

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CardDB;
-using IniParser;
-using Library;
+using CardDB.MySQL;
 using Library.ID;
+using MySql.Data.MySqlClient;
 
 
 namespace ConsoleApplication
@@ -14,7 +11,25 @@ namespace ConsoleApplication
 	{
 		static async Task Main(string[] args)
 		{
-			CardIndex.FromJSON("[null, \"123123812\"]");
+			var a = await DatabaseSetup.GetCreateDB();
+			
+			
+			Console.WriteLine(await IDGenerator.Generate());
+			return;
+			
+			var connStr = "Server=localhost; Database=oktopost; User=root; password=";
+			var conn = new MySqlConnection(connStr);
+			
+			await conn.OpenAsync();
+			
+			var cmd = new MySqlCommand();
+			
+			// cmd.CommandText
+			cmd.Connection = conn;
+			
+			var res = await cmd.ExecuteScalarAsync();
+			
+			Console.WriteLine($"Got: {res}");
 		}
 	}
 }
