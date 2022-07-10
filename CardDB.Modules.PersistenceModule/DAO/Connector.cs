@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CardDB.Modules.PersistenceModule.Base.DAO;
 using Library;
@@ -15,6 +18,21 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		
 		private string ConnectionString => $"Server={m_server}; User={m_user}; password={m_password}";
+		
+		
+		private MySqlParameter[] ToParams(object[] values)
+		{
+			return values
+				.Select(v => new MySqlParameter { Value = v })
+				.ToArray();
+		}
+		
+		private MySqlParameter[] ToParams(IEnumerable<object> values)
+		{
+			return values
+				.Select(v => new MySqlParameter { Value = v })
+				.ToArray();
+		}
 		
 		
 		public Connector(IConfig config)
@@ -62,9 +80,14 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			var cmd = await GetCommand();
 			
 			cmd.CommandText = command;
-			cmd.Parameters.AddRange(bind);
+			cmd.Parameters.AddRange(ToParams(bind));
 			
 			return cmd;
+		}
+		
+		public Task<MySqlCommand> GetCommand(string command, IEnumerable<object> bind)
+		{
+			return GetCommand(command, bind.ToArray());
 		}
 		
 		public async Task<object> ExecuteScalar(string command)
@@ -77,6 +100,29 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		{
 			var cmd = await GetCommand(command, bind);
 			return await cmd.ExecuteScalarAsync();
+		}
+		
+		public Task<object> ExecuteScalar(string command, IEnumerable<object> bind)
+		{
+			return ExecuteScalar(command, bind.ToArray());
+		}
+		
+		
+		public async Task<long> Insert(string table, Dictionary<string, object> values)
+		{
+			var columns = String.Join(", ", values.Keys);
+			var placeholders =  String.Join(", ", Enumerable.Repeat("?", values.Count));
+			
+			var cmd = await GetCommand(
+				$"INSERT INTO {table} " +
+					$"({columns}) " +
+				"VALUES " +
+					$"({placeholders})",
+				values.Values);
+			
+			await cmd.ExecuteNonQueryAsync();
+			
+			return await Task.FromResult(cmd.LastInsertedId);
 		}
 		
 		

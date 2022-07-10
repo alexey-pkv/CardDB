@@ -9,6 +9,7 @@
       <ProjectReference Include="..\CardDB.Engine\CardDB.Engine.csproj" />
       <ProjectReference Include="..\CardDB.Modules.APIModule\CardDB.Modules.APIModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.DBModule\CardDB.Modules.DBModule.csproj" />
+      <ProjectReference Include="..\CardDB.Modules.PersistenceModule\CardDB.Modules.PersistenceModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.RuntimeModule\CardDB.Modules.RuntimeModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.SignalsModule\CardDB.Modules.SignalsModule.csproj" />
       <ProjectReference Include="..\CardDB.Modules.TestModule\CardDB.Modules.TestModule.csproj" />

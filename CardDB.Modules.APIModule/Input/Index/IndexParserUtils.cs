@@ -76,7 +76,7 @@ namespace CardDB.Modules.APIModule.Input.Index
 			{
 				return new Regex(regex ?? throw new InvalidOperationException());
 			}
-			catch (RegexParseException e)
+			catch (RegexParseException)
 			{
 				throw new InvalidConditionSetupException($"Invalid regex `regex` in {field}", path);
 			}

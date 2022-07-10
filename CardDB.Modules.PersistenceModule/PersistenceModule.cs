@@ -76,10 +76,7 @@ namespace CardDB.Modules.PersistenceModule
 		}
 
 
-		public Task Persist(Action a)
-		{
-			throw new NotImplementedException();
-		}
+		public Task Persist(Action a) => Persist(a, null);
 
 		public Task Persist(Action a, Action<Action> callback)
 		{

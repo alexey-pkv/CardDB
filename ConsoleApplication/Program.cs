@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using CardDB.Modules.PersistenceModule.DAO;
 using CardDB.MySQL;
+using Library;
 using Library.ID;
 using MySql.Data.MySqlClient;
 
@@ -11,10 +14,17 @@ namespace ConsoleApplication
 	{
 		static async Task Main(string[] args)
 		{
-			var a = await DatabaseSetup.GetCreateDB();
+			var a = new Connector(new Config());
 			
 			
-			Console.WriteLine(await IDGenerator.Generate());
+			
+			var indt = await a.Insert("Server", new Dictionary<string, object>
+			{
+				{ "SequenceID", 123 }
+			});
+			
+			Console.WriteLine(indt);
+			
 			return;
 			
 			var connStr = "Server=localhost; Database=oktopost; User=root; password=";

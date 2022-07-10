@@ -7,7 +7,7 @@ use cards;
 
 CREATE TABLE IF NOT EXISTS `Action`
 (
-	`ID` bigint(20) NOT NULL,
+	`ID` bigint(20) NOT NULL AUTO_INCREMENT,
 	`SystemID` char(12) COLLATE utf8_bin NOT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -28,7 +28,7 @@ DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 CREATE TABLE IF NOT EXISTS `Item`
 (
 	`ID` char(12) COLLATE utf8_bin NOT NULL,
-	`SequenceID` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`SequenceID` bigint(20) NOT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`Type` enum('View','Card') COLLATE utf8_bin NOT NULL,
@@ -47,13 +47,29 @@ DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `DBVersions`
 (
-  `Version` int(11) NOT NULL,
-  `Created` datetime NOT NULL,
-  
-  
-  PRIMARY KEY (`Version`),
-  
-  KEY `k_Created` (`Created`)
+	`Version` int(11) NOT NULL,
+	`Created` datetime NOT NULL,
+	
+	
+	PRIMARY KEY (`Version`),
+	
+	KEY `k_Created` (`Created`)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+CREATE TABLE IF NOT EXISTS `Server`
+(
+	`ID` int(11) NOT NULL AUTO_INCREMENT,
+	`SequenceID` bigint(20) NOT NULL,
+	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`ID`),
+	
+	KEY `k_Created` (`Created`),
+	KEY `k_Modified` (`Modified`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

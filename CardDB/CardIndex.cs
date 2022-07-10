@@ -50,7 +50,7 @@ namespace CardDB
 			{
 				data = JSON.Deserialize<List<object>>(json);
 			}
-			catch (JsonException e)
+			catch (JsonException)
 			{
 				return null;
 			}

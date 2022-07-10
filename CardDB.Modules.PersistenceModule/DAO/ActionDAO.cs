@@ -17,7 +17,7 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		public void Save(Action action)
 		{
-			throw new System.NotImplementedException();
+			
 		}
 		
 		public IEnumerable<Action> Load(ulong first, int limit)
