@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CardDB.Modules.PersistenceModule.Base;
 using CardDB.Modules.PersistenceModule.Base.DAO;
 using Library;
 using MySql.Data.MySqlClient;
@@ -123,6 +124,21 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			await cmd.ExecuteNonQueryAsync();
 			
 			return await Task.FromResult(cmd.LastInsertedId);
+		}
+		
+		
+		public async Task<long> Insert<T>(string table, IDataModel<T> o)
+		{
+			long id;
+			var values = o.ToData();
+			
+			values.Remove(o.PrimaryID);
+			
+			id = await Insert(table, values);
+			
+			o.SetAutoIncID(id);
+			
+			return id;
 		}
 		
 		

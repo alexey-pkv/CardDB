@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using CardDB;
 using CardDB.Modules.PersistenceModule.DAO;
-using CardDB.MySQL;
+using CardDB.Modules.PersistenceModule.Models;
 using Library;
 using Library.ID;
-using MySql.Data.MySqlClient;
+using Action = CardDB.Action;
 
 
 namespace ConsoleApplication
@@ -14,32 +14,17 @@ namespace ConsoleApplication
 	{
 		static async Task Main(string[] args)
 		{
-			var a = new Connector(new Config());
+			var conn = new Connector(new Config());
+			var a = new Action();
 			
 			
+			a.ActionType = ActionType.DeleteCard;
+			a.GeneratedID = await IDGenerator.Generate();
 			
-			var indt = await a.Insert("Server", new Dictionary<string, object>
-			{
-				{ "SequenceID", 123 }
-			});
-			
-			Console.WriteLine(indt);
+			await conn.Action.Save(a);
 			
 			return;
 			
-			var connStr = "Server=localhost; Database=oktopost; User=root; password=";
-			var conn = new MySqlConnection(connStr);
-			
-			await conn.OpenAsync();
-			
-			var cmd = new MySqlCommand();
-			
-			// cmd.CommandText
-			cmd.Connection = conn;
-			
-			var res = await cmd.ExecuteScalarAsync();
-			
-			Console.WriteLine($"Got: {res}");
 		}
 	}
 }

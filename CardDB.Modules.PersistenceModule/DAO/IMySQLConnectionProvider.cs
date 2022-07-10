@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CardDB.Modules.PersistenceModule.Base;
 using MySql.Data.MySqlClient;
 
 
@@ -19,5 +20,7 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		public Task<object> ExecuteScalar(string command, IEnumerable<object> bind);
 		
 		public Task<long> Insert(string table, Dictionary<string, object> values);
+		
+		public Task<long> Insert<T>(string table, IDataModel<T> o);
 	}
 }
