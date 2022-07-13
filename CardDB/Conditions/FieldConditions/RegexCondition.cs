@@ -1,9 +1,9 @@
 using System.Text.RegularExpressions;
 
 
-namespace CardDB.Conditions.ValueConditions
+namespace CardDB.Conditions.FieldConditions
 {
-	public class RegexValueCondition : AbstractFieldCondition
+	public class RegexCondition : AbstractFieldCondition
 	{
 		public Regex Regex { get; set; }
 		

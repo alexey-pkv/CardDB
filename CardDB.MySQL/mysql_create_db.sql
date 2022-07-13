@@ -8,7 +8,7 @@ use cards;
 CREATE TABLE IF NOT EXISTS `Action`
 (
 	`ID` bigint(20) NOT NULL AUTO_INCREMENT,
-	`SystemID` char(12) COLLATE utf8_bin NOT NULL,
+	`SystemID` char(12) COLLATE utf8_bin NULL DEFAULT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`Type` enum('CreateCard','ModifyCard','DeleteCard','CreateView','ModifyView','DeleteView') COLLATE utf8_bin NOT NULL,

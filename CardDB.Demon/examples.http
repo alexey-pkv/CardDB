@@ -23,7 +23,7 @@ Accept: application/json
 ### Delete a card
 ####################
 
-DELETE http://localhost:7373/card/hss9fzckq7bm
+DELETE http://localhost:7373/card/hmzw5kodoc2q
 Accept: application/json
 
 ####################

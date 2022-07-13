@@ -15,8 +15,9 @@ namespace CardDB.Modules.DBModule
 		public override void PreLoad(IStateManager state)
 		{
 			var logs = GetModule<IUpdatesLogModule>();
+			var persist = GetModule<IPersistenceModule>();
 			
-			Engine.Start(logs);
+			Engine.Start(logs, persist);
 		}
 
 		public override void PreStop(IStateManager state)

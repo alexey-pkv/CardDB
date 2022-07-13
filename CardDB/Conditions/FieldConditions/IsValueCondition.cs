@@ -1,4 +1,4 @@
-namespace CardDB.Conditions.ValueConditions
+namespace CardDB.Conditions.FieldConditions
 {
 	public class IsValueCondition : AbstractValueCondition
 	{

@@ -1,5 +1,5 @@
 using System.Text.Json;
-using CardDB.Conditions.ValueConditions;
+using CardDB.Conditions.FieldConditions;
 
 
 namespace CardDB.Modules.APIModule.Input.Index.Types
@@ -8,7 +8,7 @@ namespace CardDB.Modules.APIModule.Input.Index.Types
 	{
 		public ICondition Parse(JsonElement source, string path)
 		{
-			return new RegexValueCondition
+			return new RegexCondition
 			{
 				Field = IndexParserUtils.ParseStringField(source, "field", path),
 				Regex = IndexParserUtils.ParseRegexField(source, "regex", path)

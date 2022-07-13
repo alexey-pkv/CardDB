@@ -8,5 +8,6 @@ namespace CardDB.Modules.PersistenceModule.Base.DAO
 	{
 		public Task Save(Action action);
 		public IEnumerable<Action> Load(ulong first, int limit);
+		public Action LoadByID(ulong id);
 	}
 }

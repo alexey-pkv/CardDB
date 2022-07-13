@@ -9,7 +9,7 @@ namespace Library.Tasks
 	{
 		#region Data Members
 		
-		private Queue<Action> m_actions = new();
+		private Queue<Func<Task>> m_actions = new();
 		private bool m_blIsRunning = false;
 		
 		#endregion
@@ -22,9 +22,9 @@ namespace Library.Tasks
 		
 		#region Private Methods
 		
-		private void Execute()
+		private async Task Execute()
 		{
-			Action a;
+			Func<Task> a;
 			
 			lock (m_actions)
 			{
@@ -35,16 +35,18 @@ namespace Library.Tasks
 				}
 			}
 
-			a();
+			await a();
 			
+			#pragma warning disable 4014
 			Task.Run(Execute);
+			#pragma warning restore 4014
 		}
 		
-		private void ExecuteWithTaskAwaiter(Action a, TaskCompletionSource source)
+		private async Task ExecuteWithTaskAwaiter(Func<Task> a, TaskCompletionSource source)
 		{
 			try
 			{
-				a();
+				await a();
 				source.SetResult();
 			}
 			catch (Exception e)
@@ -68,6 +70,15 @@ namespace Library.Tasks
 		
 		public void Enqueue(Action a)
 		{
+			Enqueue(() =>
+			{
+				a();
+				return Task.CompletedTask;
+			});
+		}
+		
+		public void Enqueue(Func<Task> a)
+		{
 			lock (m_actions)
 			{
 				m_actions.Enqueue(a);
@@ -80,13 +91,27 @@ namespace Library.Tasks
 			awaitExecute = EnqueueAndWait(a);
 		}
 		
+		public void Enqueue(Func<Task> a, out Task awaitExecute)
+		{
+			awaitExecute = EnqueueAndWait(a);
+		}
+		
 		public Task EnqueueAndWait(Action a)
+		{
+			return EnqueueAndWait(() =>
+			{
+				a();
+				return Task.CompletedTask;
+			});
+		}
+		
+		public Task EnqueueAndWait(Func<Task> a)
 		{
 			TaskCompletionSource source = new();
 
-			void WithAwaiter()
+			async Task WithAwaiter()
 			{
-				ExecuteWithTaskAwaiter(a, source);
+				await ExecuteWithTaskAwaiter(a, source);
 			}
 
 			lock (m_actions)

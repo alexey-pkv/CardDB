@@ -28,6 +28,8 @@ namespace CardDB.Engine.Operators.Actions
 		{
 			if (action.Sequence == 0)
 				throw new InvalidOperationException("Only sequenced actions should be passed to AddAction");
+			else if (LastSequence == 0)
+				LastSequence = action.Sequence - 1;
 			else if (action.Sequence != LastSequence + 1)
 				throw new InvalidOperationException($"Action out of sequence! Waiting for " +
 					$"{LastSequence + 1} but got {action.Sequence}");

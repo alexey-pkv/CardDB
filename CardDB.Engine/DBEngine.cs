@@ -1,8 +1,10 @@
+using System;
 using System.Threading.Tasks;
 
 using CardDB.Engine.Core;
 using CardDB.Engine.Operators;
 using CardDB.Engine.StartupData;
+using Library;
 
 
 namespace CardDB.Engine
@@ -27,9 +29,9 @@ namespace CardDB.Engine
 		
 		#region Private Methods
 		
-		private void Init(IUpdatesConsumer logs)
+		private void Init(IUpdatesConsumer logs, IActionPersistence p)
 		{
-			m_persistence = new MemoryActionPersistence();
+			m_persistence = p ?? new MemoryActionPersistence();
 						
 			m_indexer.Setup(new ReIndexOperatorStartupData
 			{
@@ -56,7 +58,15 @@ namespace CardDB.Engine
 		
 		public async Task AddAction(Action action)
 		{
-			await m_persistence.Persist(action, a => m_actions.AddAction(a));
+			try
+			{
+				await m_persistence.Persist(action, a => m_actions.AddAction(a));
+			}
+			catch (Exception e)
+			{
+				Log.Fatal("Error when creating action", e);
+				throw;
+			}
 		}
 		
 		public void ForceUpdate(Card c)
@@ -70,9 +80,9 @@ namespace CardDB.Engine
 			await m_indexer.Index(c, v);
 		}
 		
-		public void Start(IUpdatesConsumer log)
+		public void Start(IUpdatesConsumer log, IActionPersistence p = null)
 		{
-			Init(log);
+			Init(log, p);
 			
 			m_indexer.Start();
 			m_actions.StartConsumer();

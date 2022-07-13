@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CardDB.Modules.PersistenceModule.Base;
+using CardDB.Modules.PersistenceModule.Models.ActionParts;
 
 
 namespace CardDB.Modules.PersistenceModule.Models
@@ -59,17 +60,6 @@ namespace CardDB.Modules.PersistenceModule.Models
 		}
 		
 		
-		private string GetData()
-		{
-			return "";
-		}
-		
-		private void SetData()
-		{
-			
-		}
-		
-		
 		public ActionModel() {}
 		
 		public ActionModel(Action action)
@@ -90,7 +80,25 @@ namespace CardDB.Modules.PersistenceModule.Models
 		{
 			m_action = new Action();
 			
-			// TODO: 
+			if (data.TryGetValue("ID", out var id) && id != null)
+			{
+				m_action.Sequence = ulong.Parse((string)id);
+			}
+			
+			if (data.TryGetValue("SystemID", out var sysID) && id != null)
+			{
+				m_action.GeneratedID = (string)sysID;
+			}
+			
+			if (data.TryGetValue("Type", out var t) && t != null)
+			{
+				SetActionTypeValue((string)t);
+			}
+			
+			if (data.TryGetValue("Data", out var d) && d != null)
+			{
+				ActionData.SetData(m_action, (string)d);
+			}
 		}
 
 		public Dictionary<string, object> ToData()
@@ -100,7 +108,7 @@ namespace CardDB.Modules.PersistenceModule.Models
 				{ "ID",			m_action.Sequence },
 				{ "SystemID",	m_action.GeneratedID },
 				{ "Type",		GetActionTypeValue() },
-				{ "Data",		GetData() }
+				{ "Data",		ActionData.GetData(m_action) }
 			};
 		}
 

@@ -4,6 +4,7 @@ using CardDB.Modules.PersistenceModule.DAO;
 using CardDB.MySQL;
 using Library;
 using Library.State;
+using Library.Tasks;
 
 
 namespace CardDB.Modules.PersistenceModule
@@ -14,6 +15,7 @@ namespace CardDB.Modules.PersistenceModule
 
 		
 		private Connector m_connector;
+		private SimpleTaskQueue m_queue = new();
 		
 		
 		private async Task SetupDB()
@@ -58,8 +60,20 @@ namespace CardDB.Modules.PersistenceModule
 				token.Fail(e);
 			}
 		}
-
-
+		
+		private async Task PersistSync(Action a, Action<Action> callback, TaskCompletionSource source)
+		{
+			await m_connector.Action.Save(a);
+			callback(a);
+			source.SetResult();
+		}
+		
+		private async Task ExecutePersist(Action a, Action<Action> callback, TaskCompletionSource source)
+		{
+			
+		}
+		
+		
 		public override void Init()
 		{
 			base.Init();
@@ -74,13 +88,20 @@ namespace CardDB.Modules.PersistenceModule
 			
 			Task.Run(() => PreLoadAsync(token, true));
 		}
+		
+		
+		
 
 
 		public Task Persist(Action a) => Persist(a, null);
 
 		public Task Persist(Action a, Action<Action> callback)
 		{
-			throw new NotImplementedException();
+			return m_queue.EnqueueAndWait(async () =>
+			{
+				await m_connector.Action.Save(a);
+				callback(a);
+			});
 		}
 	}
 }

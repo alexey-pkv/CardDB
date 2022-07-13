@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CardDB.Conditions.FieldConditions;
-using CardDB.Conditions.ValueConditions;
 
 
 namespace CardDB.Modules.APIModule.Input.Index.Types

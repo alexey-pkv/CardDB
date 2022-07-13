@@ -29,5 +29,11 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		{
 			throw new System.NotImplementedException();
 		}
+		
+		public Action LoadByID(ulong id)
+		{
+			// TODO: ads
+			return null;
+		}
 	}
 }
