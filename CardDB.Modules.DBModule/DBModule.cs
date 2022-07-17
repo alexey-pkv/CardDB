@@ -2,6 +2,7 @@
 using Library.State;
 
 using CardDB.Engine;
+using CardDB.Engine.Core;
 
 
 namespace CardDB.Modules.DBModule
@@ -17,7 +18,10 @@ namespace CardDB.Modules.DBModule
 			var logs = GetModule<IUpdatesLogModule>();
 			var persist = GetModule<IPersistenceModule>();
 			
-			Engine.Start(logs, persist);
+			Engine.Start(
+				actionConsumers:	new IUpdatesConsumer[]{ logs, persist },
+				indexConsumers:		new IUpdatesConsumer[]{ logs },
+				p:					persist);
 		}
 
 		public override void PreStop(IStateManager state)

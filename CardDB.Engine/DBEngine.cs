@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using CardDB.Engine.Core;
 using CardDB.Engine.Operators;
 using CardDB.Engine.StartupData;
+
 using Library;
 
 
@@ -29,14 +32,33 @@ namespace CardDB.Engine
 		
 		#region Private Methods
 		
-		private void Init(IUpdatesConsumer logs, IActionPersistence p)
+		private IUpdatesConsumer GetSingleConsumer(IUpdatesConsumer[] source)
+		{
+			if (source == null || source.Length == 0)
+				return null;
+			else if (source.Length == 1)
+				return source[0];
+			else 
+				return new ConsumersCollection(source);
+		}
+		
+		private void Init(
+			IUpdatesConsumer[] actionsConsumers, 
+			IUpdatesConsumer[] indexConsumers, 
+			IActionPersistence p)
 		{
 			m_persistence = p ?? new MemoryActionPersistence();
-						
+			
+			if (actionsConsumers == null)
+				actionsConsumers = new IUpdatesConsumer[]{ m_indexer };
+			else 
+				actionsConsumers = actionsConsumers.Append(m_indexer).ToArray();
+			
+			
 			m_indexer.Setup(new ReIndexOperatorStartupData
 			{
 				DB			= m_db,
-				Consumer	= logs
+				Consumer	= GetSingleConsumer(indexConsumers)
 			});
 			
 			m_actions.Setup(new ActionsOperatorStartupData
@@ -44,11 +66,7 @@ namespace CardDB.Engine
 				DB				= m_db,
 				Actions			= null,
 				LastSequenceID	= 0,
-				UpdatesConsumer	= new ConsumersCollection(new []
-				{
-					logs,
-					m_indexer
-				})
+				UpdatesConsumer	= GetSingleConsumer(actionsConsumers)
 			});
 		}
 		
@@ -80,9 +98,12 @@ namespace CardDB.Engine
 			await m_indexer.Index(c, v);
 		}
 		
-		public void Start(IUpdatesConsumer log, IActionPersistence p = null)
+		public void Start(
+			IUpdatesConsumer[] actionConsumers, 
+			IUpdatesConsumer[] indexConsumers, 
+			IActionPersistence p = null)
 		{
-			Init(log, p);
+			Init(actionConsumers, indexConsumers, p);
 			
 			m_indexer.Start();
 			m_actions.StartConsumer();

@@ -155,11 +155,6 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			cmd.CommandText = "SELECT 1";
 			await cmd.ExecuteScalarAsync();
 		}
-
-		public async Task CreateDB()
-		{
-			throw new System.NotImplementedException();
-		}
 		
 		
 		public IActionDAO Action => new ActionDAO(this);

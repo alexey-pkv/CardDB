@@ -28,7 +28,7 @@ DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 CREATE TABLE IF NOT EXISTS `Item`
 (
 	`ID` char(12) COLLATE utf8_bin NOT NULL,
-	`SequenceID` bigint(20) NOT NULL,
+	`SequenceID` bigint(20) NULL DEFAULT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`Type` enum('View','Card') COLLATE utf8_bin NOT NULL,

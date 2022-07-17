@@ -96,28 +96,42 @@ namespace Library.State
 		
 		public void CompleteAfter(Action task)
 		{
-			var action = m_currentState;
-			var module = m_currentModule;
-			var token = CreateToken();
-			
-			Task.Run(() =>
+			CompleteAfter(() =>
 			{
-				try
-				{
-					task();
-				}
-				catch (Exception e)
-				{
-					Log.Error($"Module {module.Name} did not complete successfully for {action}", e);
-				}
-				
-				token.Complete();
+				task();
+				return Task.CompletedTask;
 			});
 		}
 		
 		public void CompleteAfter(Func<Task> task)
 		{
-			CompleteAfter(() => task().Wait());
+			var action = m_currentState;
+			var module = m_currentModule;
+			var token = CreateToken();
+
+			Task.Run(async () =>
+			{
+				try
+				{
+					await task();
+					token.Complete();
+				}
+				catch (Exception e)
+				{
+					Log.Error($"Module {module.Name} did not complete successfully for {action}", e);
+					token.Fail(e);
+				}
+			});
+		}
+		
+		public void CompleteAfter<T>(Func<T, Task> task, T t)
+		{
+			CompleteAfter(() => task(t));
+		}
+		
+		public void CompleteAfter<T1, T2>(Func<T1, T2, Task> task, T1 t1, T2 t2)
+		{
+			CompleteAfter(() => task(t1, t2));
 		}
 		
 		public void Wait(float timeout)

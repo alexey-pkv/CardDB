@@ -4,7 +4,7 @@ using Library;
 
 namespace CardDB.Modules
 {
-	public interface IPersistenceModule : IModule, IActionPersistence 
+	public interface IPersistenceModule : IModule, IActionPersistence, IUpdatesConsumer
 	{
 		
 	}

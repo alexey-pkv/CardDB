@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CardDB.Modules.PersistenceModule.DAO;
+
 using CardDB.MySQL;
+using CardDB.Modules.PersistenceModule.DAO;
+
 using Library;
 using Library.State;
 using Library.Tasks;
@@ -33,44 +35,23 @@ namespace CardDB.Modules.PersistenceModule
 		}
 		
 		
-		private async Task PreLoadAsync(IStateToken token, bool setupDB)
+		private async Task PreLoadAsync(bool setupDB)
 		{
+			if (setupDB)
+			{
+				await SetupDB();
+			}
+			
 			try
 			{
-				if (setupDB)
-				{
-					await SetupDB();
-				}
-				
-				try
-				{
-					m_connector.Test().Wait();
-					Log.Info($"[{Name}] Connection to DB: OK");
-				}
-				catch (Exception e)
-				{
-					Log.Fatal($"[{Name}] Connection to DB: FAILED!!!", e);
-					throw;
-				}
-				
-				token.Complete();
+				m_connector.Test().Wait();
+				Log.Info($"[{Name}] Connection to DB: OK");
 			}
 			catch (Exception e)
 			{
-				token.Fail(e);
+				Log.Fatal($"[{Name}] Connection to DB: FAILED!!!", e);
+				throw;
 			}
-		}
-		
-		private async Task PersistSync(Action a, Action<Action> callback, TaskCompletionSource source)
-		{
-			await m_connector.Action.Save(a);
-			callback(a);
-			source.SetResult();
-		}
-		
-		private async Task ExecutePersist(Action a, Action<Action> callback, TaskCompletionSource source)
-		{
-			
 		}
 		
 		
@@ -84,15 +65,12 @@ namespace CardDB.Modules.PersistenceModule
 		
 		public override void PreLoad(IStateManager state)
 		{
-			var token = state.CreateToken();
-			
-			Task.Run(() => PreLoadAsync(token, true));
+			state.CompleteAfter(PreLoadAsync, param: true);
 		}
 		
 		
+		#region Action Persistence
 		
-
-
 		public Task Persist(Action a) => Persist(a, null);
 
 		public Task Persist(Action a, Action<Action> callback)
@@ -103,5 +81,16 @@ namespace CardDB.Modules.PersistenceModule
 				callback(a);
 			});
 		}
+		
+		#endregion
+		
+		#region Updates 
+		
+		public void Consume(IUpdate update)
+		{
+			
+		}
+		
+		#endregion
 	}
 }
