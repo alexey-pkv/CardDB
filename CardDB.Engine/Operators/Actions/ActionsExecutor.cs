@@ -29,7 +29,7 @@ namespace CardDB.Engine.Operators.Actions
 		
 		private async void ExecuteCreateView(Action a)
 		{
-			View v = new View(
+			var v = new Card(
 				a.GeneratedID ?? await IDGenerator.Generate(),
 				a.ViewIndex
 			);

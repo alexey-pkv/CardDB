@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,7 +91,7 @@ namespace CardDB.Engine
 			m_actions.ForceUpdateCard(c);
 		}
 		
-		public async Task ForceUpdate(Card c, View v)
+		public async Task ForceUpdate(Card c, Card v)
 		{
 			ForceUpdate(c);
 			await m_indexer.Index(c, v);
@@ -117,7 +116,7 @@ namespace CardDB.Engine
 			);
 		}
 		
-		public bool TryGetView(string id, out View view)
+		public bool TryGetView(string id, out Card view)
 		{
 			return DB.Views.Views.TryGetValue(id, out view);
 		}

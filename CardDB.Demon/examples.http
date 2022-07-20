@@ -39,11 +39,11 @@ Accept: application/json
     "index":
     {
         "type": "exists",
-        "field": "index-me"
+        "field": "hello"
     },
     "order": 
     [
-        "hello"
+        "order"
     ]
 }
 

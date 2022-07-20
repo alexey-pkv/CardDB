@@ -10,7 +10,7 @@ namespace CardDB
 	{
 		public string ID { get; set; }
 		public Card Card { get; init; }
-		public View View { get; init; }
+		public Card View { get; init; }
 		public OrderValue Order { get; init; }
 		
 		public string CardID => Card?.ID ?? ID;

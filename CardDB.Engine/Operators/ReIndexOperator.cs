@@ -28,7 +28,7 @@ namespace CardDB.Engine.Operators
 		
 		#region Private Methods
 		
-		private async Task ExecuteIndexer(ulong sequence, View view, Card card)
+		private async Task ExecuteIndexer(ulong sequence, Card view, Card card)
 		{
 			Indexer i = new()
 			{
@@ -140,7 +140,7 @@ namespace CardDB.Engine.Operators
 			}
 		}
 		
-		public async Task<IndexUpdate> Index(Card c, View v)
+		public async Task<IndexUpdate> Index(Card c, Card v)
 		{
 			Indexer i = new()
 			{

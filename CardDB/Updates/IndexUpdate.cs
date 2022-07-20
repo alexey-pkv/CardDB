@@ -6,8 +6,8 @@ namespace CardDB.Updates
 		public UpdateTarget TargetType => UpdateTarget.Index;
 		
 		
-		public View View { get; init; }
 		public Card Card { get; init; }
+		public Card View { get; init; }
 		
 		public UpdateType UpdateType { get; init; }
 		public CardIndex LastIndex { get; init; } = null;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using CardDB.Modules.PersistenceModule.Base;
 using CardDB.Modules.PersistenceModule.Models.ActionParts;
 
@@ -66,16 +67,17 @@ namespace CardDB.Modules.PersistenceModule.Models
 		{
 			From(action);
 		}
-
-
+		
+		
+		public bool IsAutoInc => true;
 		public string PrimaryID => "ID";
 		
-
+		
 		public void From(Action obj)
 		{
 			m_action = obj;
 		}
-
+		
 		public void From(Dictionary<string, object> data)
 		{
 			m_action = new Action();
@@ -100,7 +102,7 @@ namespace CardDB.Modules.PersistenceModule.Models
 				ActionData.SetData(m_action, (string)d);
 			}
 		}
-
+		
 		public Dictionary<string, object> ToData()
 		{
 			return new Dictionary<string, object>
@@ -111,11 +113,6 @@ namespace CardDB.Modules.PersistenceModule.Models
 				{ "Data",		ActionData.GetData(m_action) }
 			};
 		}
-
-		public Action ToObject()
-		{
-			return m_action;
-		} 
 		
 		
 		public void SetAutoIncID(long val)

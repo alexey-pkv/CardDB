@@ -8,7 +8,7 @@ namespace CardDB.Modules.APIModule.Models
 		public string id { get; }
 		
 		
-		public ViewModel(View v)
+		public ViewModel(Card v)
 		{
 			id = v.ID;
 		}

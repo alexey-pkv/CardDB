@@ -22,5 +22,6 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		public Task<long> Insert(string table, Dictionary<string, object> values);
 		
 		public Task<long> Insert<T>(string table, IDataModel<T> o);
+		public Task<long> Update<T>(string table, IDataModel<T> o);
 	}
 }

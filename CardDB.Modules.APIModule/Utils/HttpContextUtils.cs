@@ -17,7 +17,7 @@ namespace CardDB.Modules.APIModule.Utils
 		private static readonly Regex ID_REGEX = new("^[a-z0-9]{12}$");
 		
 		
-		public static View GetView(this HttpContext ctx, string param = "id")
+		public static Card GetView(this HttpContext ctx, string param = "id")
 		{
 			var id = ctx.GetID(param);
 			

@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `Item`
 	`SequenceID` bigint(20) NULL DEFAULT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`IsDeleted` tinyint(1) NOT NULL,
 	`Type` enum('View','Card') COLLATE utf8_bin NOT NULL,
 	`Data` longtext COLLATE utf8_bin NOT NULL,
 	

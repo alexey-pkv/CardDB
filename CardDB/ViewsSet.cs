@@ -5,11 +5,11 @@ namespace CardDB
 {
 	public class ViewsSet
 	{
-		public Dictionary<string, View> Views { get; } = new();
+		public Dictionary<string, Card> Views { get; } = new();
 		public int Count => Views.Count;
 		
 		
-		public IEnumerable<View> GetViews()
+		public IEnumerable<Card> GetViews()
 		{
 			lock (Views)
 			{
@@ -18,7 +18,7 @@ namespace CardDB
 		}
 		
 		
-		public void AddView(View view)
+		public void AddView(Card view)
 		{
 			lock (Views)
 			{
@@ -26,9 +26,9 @@ namespace CardDB
 			}
 		}
 		
-		public View RemoveView(string id)
+		public Card RemoveView(string id)
 		{
-			View v = null;
+			Card v = null;
 			
 			lock (Views)
 			{

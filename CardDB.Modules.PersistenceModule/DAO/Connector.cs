@@ -132,16 +132,27 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			long id;
 			var values = o.ToData();
 			
-			values.Remove(o.PrimaryID);
+			if (o.IsAutoInc)
+			{
+				values.Remove(o.PrimaryID);
+			}
 			
 			id = await Insert(table, values);
 			
-			o.SetAutoIncID(id);
+			if (o.IsAutoInc)
+			{
+				o.SetAutoIncID(id);
+			}
 			
 			return id;
 		}
-		
-		
+
+		public Task<long> Update<T>(string table, IDataModel<T> o)
+		{
+			throw new NotImplementedException();
+		}
+
+
 		#region Connector
 		
 		public async Task Test()
@@ -158,6 +169,7 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		
 		public IActionDAO Action => new ActionDAO(this);
+		public IItemDAO Item => new ItemDAO(this);
 		
 		#endregion
 	}

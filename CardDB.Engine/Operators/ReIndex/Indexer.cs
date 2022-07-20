@@ -11,7 +11,7 @@ namespace CardDB.Engine.Operators.ReIndex
 		#region Setup
 		
 		public ulong Sequence { get; init; }
-		public View View { get; init; }
+		public Card View { get; init; }
 		public Card Card { get; init; }
 		public DB DB { get; init; }
 		public IUpdatesConsumer UpdatesConsumer { get; init; }
@@ -47,7 +47,7 @@ namespace CardDB.Engine.Operators.ReIndex
 			}
 		}
 		
-		private IndexUpdate IndexDirectSync(View view, Card c)
+		private IndexUpdate IndexDirectSync(Card view, Card c)
 		{
 			IndexUpdate update;
 			
@@ -69,9 +69,9 @@ namespace CardDB.Engine.Operators.ReIndex
 		
 		#region Public Methods
 		
-		public async Task<IndexUpdate> IndexDirect(View view, Card c)
+		public async Task<IndexUpdate> IndexDirect(Card view, Card card)
 		{
-			return await Task.Run(() => IndexDirectSync(view, c));
+			return await Task.Run(() => IndexDirectSync(view, card));
 		}
 		
 		public async Task Index()

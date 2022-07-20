@@ -7,10 +7,10 @@ namespace CardDB.Updates
 		public UpdateType UpdateType { get; init; }
 		
 		
-		public View View { get; init; }
+		public Card View { get; init; }
 		
 		
-		public static ViewUpdate ViewCreated(Action a, View view)
+		public static ViewUpdate ViewCreated(Action a, Card view)
 		{
 			return new ViewUpdate
 			{
@@ -20,7 +20,7 @@ namespace CardDB.Updates
 			};
 		}
 		
-		public static ViewUpdate ViewDeleted(Action a, View view)
+		public static ViewUpdate ViewDeleted(Action a, Card view)
 		{
 			return new ViewUpdate
 			{

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using CardDB.MySQL;
 using CardDB.Modules.PersistenceModule.DAO;
-
+using CardDB.Updates;
 using Library;
 using Library.State;
 using Library.Tasks;
@@ -88,7 +88,11 @@ namespace CardDB.Modules.PersistenceModule
 		
 		public void Consume(IUpdate update)
 		{
-			
+			if (update.TargetType == UpdateTarget.Card && 
+			    update.UpdateType == UpdateType.Added)
+			{
+				m_connector.Item.Insert(((CardUpdate)update).Card);
+			}
 		}
 		
 		#endregion

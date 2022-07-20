@@ -28,9 +28,9 @@ namespace CardDB.Modules.APIModule.Controller
 			
 			var module = Container.GetModule<IDBModule>();
 			
-			if (module.Engine.DB.Views.Views.TryGetValue(id, out var view))
+			if (module.Engine.DB.Views.Views.TryGetValue(id, out var card))
 			{
-				await ctx.Response.WithJSON(new ViewModel(view));
+				await ctx.Response.WithJSON(new ViewModel(card));
 				return;
 			}
 			else
