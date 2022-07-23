@@ -5,7 +5,6 @@ using CardDB.Updates;
 using CardDB.Engine.Core;
 
 using Library;
-using Library.ID;
 
 
 namespace CardDB.Engine.Operators.Actions
@@ -19,38 +18,19 @@ namespace CardDB.Engine.Operators.Actions
 		private async Task ExecuteCreateCardAsync(Action a)
 		{
 			CardUpdate u = await a.CreateCard();
+			Card c = u?.Card;
 			
-			if (u != null)
-			{
-				m_db.Cards.AddCard(u.Card);
-				m_consumer.Consume(u);
-			}
-		}
-		
-		private async void ExecuteCreateView(Action a)
-		{
-			var v = new Card(
-				a.GeneratedID ?? await IDGenerator.Generate(),
-				a.ViewIndex
-			);
-			
-			m_db.Views.AddView(v);
-			m_consumer.Consume(ViewUpdate.ViewCreated(a, v));
-		}
-		
-		private void ExecuteDeleteView(Action a)
-		{
-			var view = m_db.Views.RemoveView(a.ViewID);
-			
-			if (view == null)
+			if (u == null)
 				return;
 			
-			lock (view)
+			m_db.Cards.AddCard(c);
+			
+			if (c.IsView)
 			{
-				view.IsDeleted = true;
+				m_db.Views.AddView(c);
 			}
 			
-			m_consumer.Consume(ViewUpdate.ViewDeleted(a, view));
+			m_consumer.Consume(u);
 		}
 		
 		private async Task ExecuteCardsActionAsync(Action a)
@@ -83,14 +63,6 @@ namespace CardDB.Engine.Operators.Actions
 				case ActionType.DeleteCard:
 				case ActionType.ModifyCard:
 					await ExecuteCardsActionAsync(a);
-					break;
-				
-				case ActionType.CreateView:
-					ExecuteCreateView(a);
-					break;
-					
-				case ActionType.DeleteView:
-					ExecuteDeleteView(a);
 					break;
 				
 				default:

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+
 namespace CardDB.Updates
 {
 	public class CardUpdate : IUpdate
@@ -9,6 +10,7 @@ namespace CardDB.Updates
 		
 		
 		public Card Card { get; init; }
+		public string CardID => Card.ID;
 		public UpdateType UpdateType { get; init; }
 		public Dictionary<string, string> NewProperties { get; init; }
 		public Dictionary<string, string> PreviousProperties { get; init; }

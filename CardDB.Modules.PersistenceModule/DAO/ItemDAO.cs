@@ -21,7 +21,7 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		public async Task Insert(Card c)
 		{
-			await m_provider.Insert(TABLE, new ItemModel(c));
+			await m_provider.Insert(TABLE, new CardModel(c));
 		}
 
 		public Task Update(Card c)

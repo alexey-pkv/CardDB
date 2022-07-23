@@ -8,7 +8,6 @@ namespace CardDB
 	{
 		private Dictionary<string, CardIndex>	m_indexByCardID	= new();
 		private SortedSet<CardIndex>			m_view			= new();
-		private IIndexer						m_indexer;
 		
 		
 		public string ID { get; set; }
@@ -16,7 +15,8 @@ namespace CardDB
 		public Dictionary<string, string> Properties { get; } = new();
 		public int Count => m_view.Count;
 		public bool IsDeleted { get; set; } = false;
-		public bool IsView => m_indexer != null; 
+		public bool IsView => Indexer != null; 
+		public IIndexer Indexer { get; set; }
 		
 		
 		public void SetProperty(string key, string value) => Properties[key] = value;
@@ -25,10 +25,25 @@ namespace CardDB
 		
 		public Card() {}
 		public Card(string id) { ID = id; }
+		
 		public Card(string id, IIndexer indexer)
 		{
 			ID = id;
-			m_indexer = indexer;
+			Indexer = indexer;
+		}
+		
+		public Card(string id, IIndexer indexer, IDictionary<string, string> props)
+		{
+			ID = id;
+			Indexer = indexer;
+			
+			if (props != null)
+			{
+				foreach (var kvp in props)
+				{
+					Properties.Add(kvp.Key, kvp.Value);
+				}
+			}
 		}
 		
 		
@@ -79,7 +94,7 @@ namespace CardDB
 		public IndexUpdate Index(ulong sequence, Card c)
 		{
 			m_indexByCardID.TryGetValue(c.ID, out var existingIndex);
-			var newOrderValue = m_indexer.Index(c);
+			var newOrderValue = Indexer.Index(c);
 			
 			// New Card
 			if (newOrderValue != null && existingIndex == null)

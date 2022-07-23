@@ -12,9 +12,6 @@ namespace CardDB.Modules.APIModule.Models.Updates
 		public CardUpdateModel cardUpdate { get; }
 		
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		public ViewUpdateModel viewUpdate { get; }
-		
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public IndexUpdateModel indexUpdate { get; }
 		
 		
@@ -25,7 +22,6 @@ namespace CardDB.Modules.APIModule.Models.Updates
 			var update = updateLog.Update;
 			
 			if (update is CardUpdate) cardUpdate = new CardUpdateModel(update);
-			else if (update is ViewUpdate) viewUpdate = new ViewUpdateModel(update);
 			else if (update is IndexUpdate) indexUpdate = new IndexUpdateModel(update);
 		}
 	}

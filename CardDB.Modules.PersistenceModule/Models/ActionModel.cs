@@ -22,12 +22,6 @@ namespace CardDB.Modules.PersistenceModule.Models
 					return "DeleteCard";
 				case ActionType.ModifyCard:
 					return "ModifyCard";
-				case ActionType.CreateView:
-					return "CreateView";
-				case ActionType.ModifyView:
-					return "ModifyView";
-				case ActionType.DeleteView:
-					return "DeleteView";
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -45,15 +39,6 @@ namespace CardDB.Modules.PersistenceModule.Models
 					break;
 				case "ModifyCard":
 					m_action.ActionType = ActionType.ModifyCard;
-					break;
-				case "CreateView":
-					m_action.ActionType = ActionType.CreateView;
-					break;
-				case "ModifyView":
-					m_action.ActionType = ActionType.ModifyView;
-					break;
-				case "DeleteView":
-					m_action.ActionType = ActionType.DeleteView;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

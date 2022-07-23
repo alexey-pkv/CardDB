@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -76,7 +77,7 @@ namespace CardDB.Engine.Operators
 					}
 				}
 
-				await ExecuteIndexer(update.Sequence, ((ViewUpdate)update).View, null);
+				await ExecuteIndexer(update.Sequence, ((CardUpdate)update).Card, null);
 			}
 		}
 
@@ -97,7 +98,7 @@ namespace CardDB.Engine.Operators
 		{
 			if (update.UpdateType == UpdateType.Removed)
 			{
-				m_db.Views.RemoveView(((ViewUpdate)update).View.ID);
+				m_db.Views.RemoveView(((CardUpdate)update).CardID);
 				return;
 			}
 			
@@ -123,20 +124,28 @@ namespace CardDB.Engine.Operators
 			m_consumer = data.Consumer;
 		}
 		
+		
+		private void ConsumeCardUpdate(CardUpdate update)
+		{
+			AddCardUpdate(update);
+			
+			if (update.Card.IsView)
+			{
+				AddViewUpdate(update);
+			}
+		}
+		
+		
 		public void Consume(IUpdate update)
 		{
 			switch (update.TargetType)
 			{
 				case UpdateTarget.Card:
-					AddCardUpdate(update);
-					break;
-				
-				case UpdateTarget.View:
-					AddViewUpdate(update);
+					ConsumeCardUpdate((CardUpdate)update);
 					break;
 				
 				default:
-					break;
+					throw new NotImplementedException($"Unsupported type {update.TargetType}");
 			}
 		}
 		

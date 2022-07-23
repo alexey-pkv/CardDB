@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 
 using CardDB.Modules.PersistenceModule.Base;
-using CardDB.Modules.PersistenceModule.Models.ItemParts;
-
+using CardDB.Modules.PersistenceModule.Models.CardParts;
 using Library;
 
 
 namespace CardDB.Modules.PersistenceModule.Models
 {
-	public class ItemModel : IDataModel<Card>
+	public class CardModel : IDataModel<Card>
 	{
 		public bool IsAutoInc => false;
 		public string PrimaryID => "ID";
@@ -17,8 +16,8 @@ namespace CardDB.Modules.PersistenceModule.Models
 		private Card m_card;
 		
 		
-		public ItemModel() {}
-		public ItemModel(Card card) { m_card = card; }
+		public CardModel() {}
+		public CardModel(Card card) { m_card = card; }
 		
 		
 		public void From(Card obj)
@@ -35,15 +34,12 @@ namespace CardDB.Modules.PersistenceModule.Models
 		{
 			if (m_card != null)
 			{
-				var props = m_card.IsDeleted ? null : JSON.Serialize(m_card.Properties);
-				
 				return new Dictionary<string, object>
 				{
 					{ "ID",			m_card.ID },
 					{ "SequenceID",	m_card.SequenceID },
-					{ "Type",		ItemType.Card },
 					{ "IsDeleted",	m_card.IsDeleted },
-					{ "Data",		props }
+					{ "Data",		CardData.GetData(m_card) }
 				};
 			}
 			else

@@ -4,9 +4,6 @@ namespace CardDB
 	{
 		CreateCard,
 		DeleteCard,
-		ModifyCard,
-		CreateView,
-		ModifyView,
-		DeleteView
+		ModifyCard
 	}
 }

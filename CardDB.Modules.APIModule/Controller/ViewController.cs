@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CardDB.Indexing;
@@ -70,7 +69,7 @@ namespace CardDB.Modules.APIModule.Controller
 			
 			await module.Engine.AddAction(new Action
 			{
-				ActionType = ActionType.CreateView,
+				ActionType = ActionType.CreateCard,
 				GeneratedID = id,
 				ViewIndex = new StandardIndexer
 				{

@@ -91,6 +91,10 @@ namespace CardDB.Modules.UpdatesLog
 			{
 				return ((CardUpdate)update).Card.ID == query.CardFilter;
 			}
+			else if (update is CardUpdate && query.ViewFilter != null)
+			{
+				return ((CardUpdate)update).Card.ID == query.ViewFilter;
+			}
 			else if (update is IndexUpdate)
 			{
 				if (query.CardFilter != null && ((IndexUpdate)update).Card.ID != query.CardFilter)
@@ -102,10 +106,6 @@ namespace CardDB.Modules.UpdatesLog
 				{
 					return false;
 				}
-			}
-			else if (update is ViewUpdate && query.ViewFilter != null)
-			{
-				return ((ViewUpdate)update).View.ID == query.ViewFilter;
 			}
 			
 			return false;

@@ -8,7 +8,8 @@ Accept: application/json
 
 {
 	"hello": "world",
-	"order": "133"
+	"order": "133",
+	"B": "123"
 }
 
 ####################
@@ -48,6 +49,36 @@ Accept: application/json
 }
 
 ####################
+### Create a View
+### The view will contain only cards with a field "index-me" and order using the "hello" field
+### Response:
+###		{"id":"ukh4d03ecg8a"}
+####################
+POST http://localhost:7373/view
+Accept: application/json
+
+{
+    "index":
+    {
+        "type": "or",
+        "conditions": [
+            {
+                "type": "exists",
+                "field": "A"
+            },
+            {
+                "type": "exists",
+                "field": "B"
+            }
+        ]
+    },
+    "order": 
+    [
+        "order"
+    ]
+}
+
+####################
 ### Create cards with field index-me and one without (Run a few times with different "hello" to see how order works.
 ####################
 POST http://localhost:7373/card
@@ -77,7 +108,7 @@ Accept: application/json
 ### - count - max items to return.
 ### - after - the last order after which to return the cards. In this example after should be `after=["hello","tta3k153asxu"]` -> this is the value of the "order" field of the last returned card 
 ####################
-GET http://localhost:7373/view/fr54u4rvzabq/cards?count=2
+GET http://localhost:7373/view/qhh8p9vh340f/cards?count=2
 Accept: application/json
 
 

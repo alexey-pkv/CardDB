@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Library;
+﻿using Library;
 using Library.State;
 using WatsonWebserver;
 
@@ -21,6 +20,11 @@ namespace CardDB.Modules.APIModule
 			
 			
 			m_server = new Server(host, port);
+			
+			m_server.Events.ExceptionEncountered += (sender, args) =>
+			{
+				Log.Error($"[APIModule] Failed to handle request {args.Method}: {args.Url}", args.Exception);
+			};
 			
 			m_server.StartAsync();
 			

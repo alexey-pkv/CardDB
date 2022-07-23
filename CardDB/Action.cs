@@ -117,12 +117,11 @@ namespace CardDB
 		
 		public async Task<CardUpdate> CreateCard()
 		{
-			Card c = new(GeneratedID ?? await IDGenerator.Generate());
-
-			foreach (var kvp in Properties)
-			{
-				c.Properties.Add(kvp.Key, kvp.Value);
-			}
+			Card c = new(
+				GeneratedID ?? await IDGenerator.Generate(),
+				ViewIndex,
+				Properties
+			);
 			
 			return CardUpdate.CardCreated(this, c);
 		}
