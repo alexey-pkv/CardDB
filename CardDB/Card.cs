@@ -11,6 +11,7 @@ namespace CardDB
 		
 		
 		public string ID { get; set; }
+		public string BucketID { get; set; }
 		public ulong SequenceID { get; set; }
 		public Dictionary<string, string> Properties { get; } = new();
 		public int Count => m_view.Count;

@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AdaptiveExpressions" Version="4.16.1" />
       <PackageReference Include="MySql.Data" Version="8.0.29" />
     </ItemGroup>
 

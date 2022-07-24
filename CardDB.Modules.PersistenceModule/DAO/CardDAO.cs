@@ -5,15 +5,15 @@ using CardDB.Modules.PersistenceModule.Models;
 
 namespace CardDB.Modules.PersistenceModule.DAO
 {
-	public class ItemDAO : IItemDAO
+	public class CardDAO : ICardDAO
 	{
-		private const string TABLE	= "Item";
+		private const string TABLE	= "Card";
 		
 		
 		private IMySQLConnectionProvider m_provider;
 		
 		
-		public ItemDAO(IMySQLConnectionProvider connectionProvider)
+		public CardDAO(IMySQLConnectionProvider connectionProvider)
 		{
 			m_provider = connectionProvider;
 		}

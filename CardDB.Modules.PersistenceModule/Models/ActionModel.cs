@@ -99,6 +99,10 @@ namespace CardDB.Modules.PersistenceModule.Models
 			};
 		}
 		
+		public Action GetObject()
+		{
+			return m_action;
+		}
 		
 		public void SetAutoIncID(long val)
 		{

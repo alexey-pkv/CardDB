@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using AdaptiveExpressions;
 using CardDB.MySQL;
 using CardDB.Modules.PersistenceModule.DAO;
+using CardDB.Modules.PersistenceModule.Exceptions;
 using CardDB.Updates;
 using Library;
+using Library.ID;
 using Library.State;
 using Library.Tasks;
 
@@ -18,6 +20,10 @@ namespace CardDB.Modules.PersistenceModule
 		
 		private Connector m_connector;
 		private SimpleTaskQueue m_queue = new();
+		
+		
+		private LRUCache<string, Bucket> m_bucketByName = new(1000);
+		private LRUCache<string, Bucket> m_bucketByID = new(1000);
 		
 		
 		private async Task SetupDB()
@@ -91,8 +97,57 @@ namespace CardDB.Modules.PersistenceModule
 			if (update.TargetType == UpdateTarget.Card && 
 			    update.UpdateType == UpdateType.Added)
 			{
-				m_connector.Item.Insert(((CardUpdate)update).Card);
+				m_connector.Card.Insert(((CardUpdate)update).Card);
 			}
+		}
+		
+		#endregion
+
+		#region Bucket
+
+
+		public async Task<Bucket> Create(string name)
+		{
+			name = Formats.SanitizeBucketName(name);
+			
+			if (m_bucketByName.TryGet(name, out _))
+				throw new BucketAlreadyExistsException(name);
+			
+			Bucket bucket = new Bucket
+			{
+				ID		= await IDGenerator.Generate(),
+				Name	= name
+			};
+			
+			if (!await m_connector.Bucket.Save(bucket))
+			{
+				throw new BucketAlreadyExistsException(name);
+			}
+			
+			m_bucketByName.Set(bucket.Name, bucket);
+			m_bucketByID.Set(bucket.ID, bucket);
+			
+			return bucket;
+		}
+
+		public async Task<Bucket> GetByName(string name)
+		{
+			Bucket bucket;
+			
+			name = Formats.SanitizeBucketName(name);
+			
+			if (m_bucketByName.TryGet(name, out bucket))
+				return bucket;
+			
+			bucket = await m_connector.Bucket.LoadByName(name);
+			
+			if (bucket != null)
+			{
+				m_bucketByName.Set(bucket.Name, bucket);
+				m_bucketByID.Set(bucket.ID, bucket);
+			}
+			
+			return bucket;
 		}
 		
 		#endregion

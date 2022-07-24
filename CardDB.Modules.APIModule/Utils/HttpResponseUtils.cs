@@ -20,6 +20,15 @@ namespace CardDB.Modules.APIModule.Utils
 			return await response.Send(JSON.Serialize(with), token);
 		}
 		
+		public static async Task<bool> WithError(this HttpResponse response, int code, string message)
+		{
+			return await response.WithJSON(new ErrorModel
+			{
+				Code = code,
+				message = message,
+			});
+		}
+		
 		public static async Task WithNotFound(this HttpResponse response)
 		{
 			await response.WithJSON(new NotFoundErrorModel());

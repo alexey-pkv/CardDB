@@ -9,6 +9,7 @@ namespace CardDB
 	public class Action
 	{
 		public ulong Sequence { get; set; }
+		public string BucketID { get; set; }
 		public ActionType ActionType { get; set; }
 		
 		

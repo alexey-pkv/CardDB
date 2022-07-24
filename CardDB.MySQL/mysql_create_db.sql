@@ -5,9 +5,27 @@ DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 use cards;
 
 
+CREATE TABLE IF NOT EXISTS `Bucket`
+(
+	`ID` char(12) COLLATE utf8_bin NOT NULL,
+	`Name` char(128) COLLATE utf8_bin NOT NULL,
+	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	
+	
+	PRIMARY KEY (`ID`),
+	UNIQUE KEY `u_Name` (`Name`),
+	KEY `k_Created` (`Created`),
+	KEY `k_Modified` (`Modified`)
+) 
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
 CREATE TABLE IF NOT EXISTS `Action`
 (
 	`ID` bigint(20) NOT NULL AUTO_INCREMENT,
+	`BucketID` char(12) COLLATE utf8_bin NOT NULL,
 	`SystemID` char(12) COLLATE utf8_bin NULL DEFAULT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -18,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `Action`
 	PRIMARY KEY (`ID`),
 	
 	UNIQUE KEY `u_SystemID` (`SystemID`),
+	KEY `k_BucketID_Created` (`BucketID`, `Created`),
 	KEY `k_Created` (`Created`),
 	KEY `k_Modified` (`Modified`)
 ) 
@@ -25,9 +44,10 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
-CREATE TABLE IF NOT EXISTS `Item`
+CREATE TABLE IF NOT EXISTS `Card`
 (
 	`ID` char(12) COLLATE utf8_bin NOT NULL,
+	`BucketID` char(12) COLLATE utf8_bin NOT NULL,
 	`SequenceID` bigint(20) NULL DEFAULT NULL,
 	`Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`Modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -38,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `Item`
 	
 	PRIMARY KEY (`ID`),
 	
+	KEY `k_BucketID_Created` (`BucketID`, `Created`),
 	KEY `k_SequenceID` (`SequenceID`),
 	KEY `k_Created` (`Created`),
 	KEY `k_Modified` (`Modified`)

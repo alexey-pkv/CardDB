@@ -1,0 +1,19 @@
+####################
+### Create a new bucket.
+### Bucket name must be in format: [a-z0-9_\-\.\:]{8,32}
+### Response:
+###		{"id":"wcq9dzt0qfj3","name":"name"}
+####################
+POST http://localhost:7373/bucket/hello_world
+Accept: application/json
+
+
+####################
+### Get a bucket by name.
+### Bucket name must be in format: [a-z0-9_\-\.\:]{8,32}
+### Response:
+###		{"id":"wcq9dzt0qfj3","name":"name"}
+####################
+GET http://localhost:7373/bucket/hello_world
+Accept: application/json
+

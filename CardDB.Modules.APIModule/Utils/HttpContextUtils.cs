@@ -72,6 +72,17 @@ namespace CardDB.Modules.APIModule.Utils
 			return int_val;
 		}
 		
+		
+		public static string GetURLString(this HttpContext ctx, string param, string def = null)
+		{
+			if (!ctx.Request.Url.Parameters.TryGetValue(param, out var val))
+			{
+				return def;
+			}
+			
+			return val;
+		}
+		
 		public static string GetID(this HttpContext ctx, string param = "id", string def = null)
 		{
 			if (!ctx.Request.Url.Parameters.TryGetValue(param, out var val) && 

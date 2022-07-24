@@ -1,9 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
 using CardDB.Modules.PersistenceModule.Base;
 using CardDB.Modules.PersistenceModule.Base.DAO;
+
 using Library;
 using MySql.Data.MySqlClient;
 
@@ -126,6 +128,30 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			return await Task.FromResult(cmd.LastInsertedId);
 		}
 		
+		public async Task<long?> InsertIgnore(string table, Dictionary<string, object> values)
+		{
+			var columns = String.Join(", ", values.Keys);
+			var placeholders =  String.Join(", ", Enumerable.Repeat("?", values.Count));
+			
+			var cmd = await GetCommand(
+				$"INSERT IGNORE INTO {table} " +
+					$"({columns}) " +
+				"VALUES " +
+					$"({placeholders})",
+				values.Values);
+			
+			var affected = await cmd.ExecuteNonQueryAsync();
+			
+			if (affected == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return await Task.FromResult(cmd.LastInsertedId);
+			}
+		}
+		
 		
 		public async Task<long> Insert<T>(string table, IDataModel<T> o)
 		{
@@ -146,10 +172,62 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			
 			return id;
 		}
+		
+		public async Task<long?> InsertIgnore<T>(string table, IDataModel<T> o)
+		{
+			long? id;
+			var values = o.ToData();
+			
+			if (o.IsAutoInc)
+			{
+				values.Remove(o.PrimaryID);
+			}
+			
+			id = await InsertIgnore(table, values);
+			
+			if (id != null && o.IsAutoInc)
+			{
+				o.SetAutoIncID((long)id);
+			}
+			
+			return id;
+		}
 
 		public Task<long> Update<T>(string table, IDataModel<T> o)
 		{
 			throw new NotImplementedException();
+		}
+		
+		public async Task<K> LoadOneByField<T, K>(string table, string field, string value)
+			where T : IDataModel<K>, new()
+			where K : class
+		{
+			var cmd = await GetCommand(
+				$"SELECT * FROM {table} " +
+					$"WHERE {field} = ? " +
+					$"LIMIT 2",
+				new object[]{ value });
+			
+			var res = await cmd.ExecuteReaderAsync();
+			T model = default(T);
+
+			while (await res.ReadAsync())
+			{
+				if (model != null)
+					throw new CardDBException($"More than one row selected for {table} {field}={value}");
+				
+				var data = new Dictionary<string, object>();
+				
+				for (int i = 0; i < res.FieldCount; i++)
+				{
+					data[res.GetName(i)] = res.GetValue(i);
+				}
+				
+				model = new T();
+				model.From(data);
+			}
+			
+			return model == null ? null : model.GetObject();
 		}
 
 
@@ -169,7 +247,8 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		
 		public IActionDAO Action => new ActionDAO(this);
-		public IItemDAO Item => new ItemDAO(this);
+		public ICardDAO Card => new CardDAO(this);
+		public IBucketDAO Bucket => new BucketDAO(this);
 		
 		#endregion
 	}

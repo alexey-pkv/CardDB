@@ -13,5 +13,6 @@ namespace CardDB.Modules.PersistenceModule.Base
 		public Dictionary<string, object> ToData();
 		
 		public void SetAutoIncID(long val);
+		public T GetObject();
 	}
 }
