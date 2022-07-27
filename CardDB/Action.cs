@@ -118,11 +118,14 @@ namespace CardDB
 		
 		public async Task<CardUpdate> CreateCard()
 		{
-			Card c = new(
-				GeneratedID ?? await IDGenerator.Generate(),
-				ViewIndex,
-				Properties
-			);
+			Card c = new()
+			{
+				ID = GeneratedID ?? await IDGenerator.Generate(),
+				BucketID = BucketID,
+				Indexer = ViewIndex,
+				Properties = Properties,
+				SequenceID = Sequence
+			};
 			
 			return CardUpdate.CardCreated(this, c);
 		}

@@ -93,6 +93,7 @@ namespace CardDB.Modules.PersistenceModule.Models
 			return new Dictionary<string, object>
 			{
 				{ "ID",			m_action.Sequence },
+				{ "BucketID",	m_action.BucketID },
 				{ "SystemID",	m_action.GeneratedID },
 				{ "Type",		GetActionTypeValue() },
 				{ "Data",		ActionData.GetData(m_action) }

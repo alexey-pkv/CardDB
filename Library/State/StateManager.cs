@@ -103,6 +103,16 @@ namespace Library.State
 			});
 		}
 		
+		public void CompleteAfter(Task task)
+		{
+			CompleteAfter(() => task);
+		}
+		
+		public void CompleteAfter(IEnumerable<Task> tasks)
+		{
+			CompleteAfter(() => Task.WhenAll(tasks));
+		}
+		
 		public void CompleteAfter(Func<Task> task)
 		{
 			var action = m_currentState;

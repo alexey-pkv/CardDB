@@ -5,6 +5,7 @@ namespace CardDB.Updates
 {
 	public class CardUpdate : IUpdate
 	{
+		public Bucket Bucket { get; init; }
 		public ulong Sequence { get; init; }
 		public UpdateTarget TargetType => UpdateTarget.Card;
 		

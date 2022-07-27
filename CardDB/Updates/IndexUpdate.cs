@@ -2,6 +2,7 @@ namespace CardDB.Updates
 {
 	public class IndexUpdate : IUpdate
 	{
+		public Bucket Bucket { get; init; }
 		public ulong Sequence { get; init; }
 		public UpdateTarget TargetType => UpdateTarget.Index;
 		

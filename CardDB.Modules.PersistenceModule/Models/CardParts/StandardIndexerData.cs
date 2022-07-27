@@ -21,5 +21,15 @@ namespace CardDB.Modules.PersistenceModule.Models.CardParts
 			if (indexer.Condition != null)
 				condition = new ConditionModel(indexer.Condition);
 		}
+		
+		
+		public StandardIndexer Get()
+		{
+			return new StandardIndexer
+			{
+				Condition = condition.Get(),
+				OrderProperties = order
+			};
+		}
 	}
 }

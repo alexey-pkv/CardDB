@@ -16,6 +16,7 @@ namespace CardDB.Modules.APIModule.Controller
 		[ParameterRoute(HttpMethod.GET, "/card/{id}")]
 		public static async Task GetCard(HttpContext ctx)
 		{
+			var bucket = await ctx.RequireBucket();
 			var id = ctx.GetID();
 			var latest = ctx.GetBoolParam("latest");
 			
@@ -26,7 +27,8 @@ namespace CardDB.Modules.APIModule.Controller
 			}
 			
 			var module = Container.GetModule<IDBModule>();
-			var db = module.Engine.DB;
+			var engine = module.GetOrCreateEngine(bucket);
+			var db = engine.DB;
 			
 			if (!db.Cards.Cards.TryGetValue(id, out var c))
 			{
@@ -36,7 +38,7 @@ namespace CardDB.Modules.APIModule.Controller
 			
 			if (latest)
 			{
-				module.Engine.ForceUpdate(c);
+				engine.ForceUpdate(c);
 			}
 			
 			if (c.IsDeleted)
@@ -51,6 +53,7 @@ namespace CardDB.Modules.APIModule.Controller
 		[ParameterRoute(HttpMethod.POST, "/card")]
 		public static async Task CreateCard(HttpContext ctx)
 		{
+			var bucket = await ctx.RequireBucket();
 			var module = Container.GetModule<IDBModule>();
 			var createCard = await ctx.GetCreateCard();
 			
@@ -62,12 +65,14 @@ namespace CardDB.Modules.APIModule.Controller
 			
 			var id = await IDGenerator.Generate();
 			
-			await module.Engine.AddAction(new Action
-			{
-				GeneratedID = id,
-				ActionType = ActionType.CreateCard,
-				Properties = createCard.properties,
-			});
+			await module.AddAction(
+				bucket,
+				new Action
+				{
+					GeneratedID = id,
+					ActionType = ActionType.CreateCard,
+					Properties = createCard.properties,
+				});
 			
 			await ctx.Response.WithID(id);
 		}
@@ -75,6 +80,7 @@ namespace CardDB.Modules.APIModule.Controller
 		[ParameterRoute(HttpMethod.DELETE, "/card/{id}")]
 		public static async Task DeleteCard(HttpContext ctx)
 		{
+			var bucket = await ctx.RequireBucket();
 			var id = ctx.GetID();
 			
 			if (id == null)
@@ -84,13 +90,14 @@ namespace CardDB.Modules.APIModule.Controller
 			}
 			
 			var module = Container.GetModule<IDBModule>();
-			var db = module.Engine.DB;
 			
-			await module.Engine.AddAction(new Action
-			{
-				CardIDs = new HashSet<string>(new [] { id }),
-				ActionType = ActionType.DeleteCard,
-			});
+			await module.AddAction(
+				bucket,
+				new Action
+				{
+					CardIDs = new HashSet<string>(new [] { id }),
+					ActionType = ActionType.DeleteCard,
+				});
 			
 			await ctx.Response.WithOK();
 		}

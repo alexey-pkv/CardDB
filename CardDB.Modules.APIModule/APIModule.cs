@@ -21,11 +21,7 @@ namespace CardDB.Modules.APIModule
 			
 			m_server = new Server(host, port);
 			
-			m_server.Events.ExceptionEncountered += (sender, args) =>
-			{
-				Log.Error($"[APIModule] Failed to handle request {args.Method}: {args.Url}", args.Exception);
-			};
-			
+			m_server.Events.ExceptionEncountered += APIErrorHandler.Handle;
 			m_server.StartAsync();
 			
 			Log.Info($"[APIModule] Running on {host}:{port}");

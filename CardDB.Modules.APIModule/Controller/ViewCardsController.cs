@@ -12,7 +12,7 @@ namespace CardDB.Modules.APIModule.Controller
 		[ParameterRoute(HttpMethod.GET, "/view/{id}/cards")]
 		public static async Task GetCards(HttpContext ctx)
 		{
-			var view = ctx.GetView();
+			var view = await ctx.GetView();
 			var count = ctx.GetIntParam(
 				param: "count",
 				def: 100,
@@ -25,11 +25,6 @@ namespace CardDB.Modules.APIModule.Controller
 			if (!string.IsNullOrEmpty(afterParam))
 			{
 				after = CardIndex.FromJSON(afterParam);
-			}
-			
-			if (view == null)
-			{
-				await ctx.Response.WithNotFound();
 			}
 			
 			var list = view.GetList(count, after);

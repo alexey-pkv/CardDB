@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -5,6 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using CardDB.Modules.APIModule.Exceptions;
 using CardDB.Modules.APIModule.Models;
 using Library;
 using WatsonWebserver;
@@ -17,8 +19,9 @@ namespace CardDB.Modules.APIModule.Utils
 		private static readonly Regex ID_REGEX = new("^[a-z0-9]{12}$");
 		
 		
-		public static Card GetView(this HttpContext ctx, string param = "id")
+		public static async Task<Card> GetView(this HttpContext ctx, string param = "id")
 		{
+			var bucket = await ctx.RequireBucket();
 			var id = ctx.GetID(param);
 			
 			if (id == null)
@@ -28,7 +31,7 @@ namespace CardDB.Modules.APIModule.Utils
 			
 			var module = Container.GetModule<IDBModule>();
 			
-			return module.Engine.TryGetView(id, out var view) ? view : null;
+			return module.TryGetView(bucket, id, out var view) ? view : null;
 		}
 		
 		
@@ -72,6 +75,30 @@ namespace CardDB.Modules.APIModule.Utils
 			return int_val;
 		}
 		
+		
+		public static async Task<Bucket> RequireBucket(this HttpContext ctx)
+		{
+			string bucketName;
+			
+			if (!ctx.Request.Query.Elements.TryGetValue("bucket-name", out bucketName) &&
+			    !ctx.Request.Headers.TryGetValue("x-bucket-name", out bucketName))
+			{
+				throw new APIMissingBucketNameException();
+			}
+			else if (!Formats.TrySanitizeBucketName(bucketName, out bucketName))
+			{
+				throw new APIInvalidBucketNameException(bucketName);
+			}
+			
+			var bucket = await Container.GetModule<IPersistenceModule>().GetByName(bucketName);
+			
+			if (bucket == null)
+			{
+				throw new APIBucketNotFoundByNameException(bucketName);
+			}
+			
+			return bucket;
+		}
 		
 		public static string GetURLString(this HttpContext ctx, string param, string def = null)
 		{

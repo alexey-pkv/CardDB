@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using CardDB.Indexing;
 using Library;
 
@@ -37,6 +38,18 @@ namespace CardDB.Modules.PersistenceModule.Models.CardParts
 			
 			var cd = new CardData(c);
 			return JSON.Serialize(cd);
+		}
+		
+		public static void SetData(string serialize, Card target)
+		{
+			var res = JSON.Deserialize<CardData>(serialize);
+			
+			foreach (var kvp in res.properties)
+			{
+				target.Properties.Add(kvp.Key, kvp.Value);
+			}
+			
+			target.Indexer = res.index.Get();
 		}
 	}
 }

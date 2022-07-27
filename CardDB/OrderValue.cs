@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
-using CardDB.Exceptions;
 using System.Collections.Generic;
+
+using Library;
 
 
 namespace CardDB
@@ -52,7 +53,7 @@ namespace CardDB
 			}
 			else
 			{
-				throw new FatalCardDBException("Unexpected type: " + b.GetType().FullName);
+				throw new CardDBException("Unexpected type: " + b.GetType().FullName);
 			}
 		}
 		
@@ -68,7 +69,7 @@ namespace CardDB
 			}
 			else
 			{
-				throw new FatalCardDBException("Unexpected type: " + b.GetType().FullName);
+				throw new CardDBException("Unexpected type: " + b.GetType().FullName);
 			}
 		}
 		
@@ -108,8 +109,7 @@ namespace CardDB
 			}
 			else
 			{
-				throw new FatalCardDBException(
-					"Unexpected types: " + a.GetType().FullName + " and " + b.GetType().FullName);
+				throw new CardDBException("Unexpected types: " + a.GetType().FullName + " and " + b.GetType().FullName);
 			}
 		}
 		

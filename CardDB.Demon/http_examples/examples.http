@@ -7,6 +7,7 @@
 ####################
 POST http://localhost:7373/card
 Accept: application/json
+x-bucket-name: hello_world
 
 {
 	"hello": "world",
@@ -19,7 +20,7 @@ Accept: application/json
 ### Response:
 ###		{"id":"wcq9dzt0qfj3","properties":{"hello":"world","order":"133"}}
 ####################
-GET http://localhost:7373/card/vvo7ukonv08k
+GET http://localhost:7373/card/vvo7ukonv08k?bucket-name=hello_world
 Accept: application/json
 
 ####################

@@ -17,6 +17,7 @@ namespace CardDB.Modules.APIModule.Controller
 		[ParameterRoute(HttpMethod.GET, "/view/{id}")]
 		public static async Task GetView(HttpContext ctx)
 		{
+			var bucket = await ctx.RequireBucket();
 			var id = ctx.GetID();
 			
 			if (id == null)
@@ -27,7 +28,7 @@ namespace CardDB.Modules.APIModule.Controller
 			
 			var module = Container.GetModule<IDBModule>();
 			
-			if (module.Engine.DB.Views.Views.TryGetValue(id, out var card))
+			if (module.TryGetView(bucket, id, out var card))
 			{
 				await ctx.Response.WithJSON(new ViewModel(card));
 				return;
@@ -41,7 +42,9 @@ namespace CardDB.Modules.APIModule.Controller
 		[ParameterRoute(HttpMethod.POST, "/view")]
 		public static async Task CreateView(HttpContext ctx)
 		{
+			var bucket = await ctx.RequireBucket();
 			var module = Container.GetModule<IDBModule>();
+			
 			CreateViewModel model;
 
 			try
@@ -67,16 +70,18 @@ namespace CardDB.Modules.APIModule.Controller
 				return;
 			}
 			
-			await module.Engine.AddAction(new Action
-			{
-				ActionType = ActionType.CreateCard,
-				GeneratedID = id,
-				ViewIndex = new StandardIndexer
+			await module.AddAction(
+				bucket,
+				new Action
 				{
-					Condition = cond,
-					OrderProperties = model.order
-				}
-			});
+					ActionType = ActionType.CreateCard,
+					GeneratedID = id,
+					ViewIndex = new StandardIndexer
+					{
+						Condition = cond,
+						OrderProperties = model.order
+					}
+				});
 			
 			await ctx.Response.WithID(id);
 		}

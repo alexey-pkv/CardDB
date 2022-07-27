@@ -12,8 +12,9 @@ namespace CardDB.Modules.APIModule.Controller
 		[StaticRoute(HttpMethod.GET, "/stats")]
 		public static async Task GetStatistics(HttpContext ctx)
 		{
+			var bucket = await ctx.RequireBucket();
 			var module = Container.GetModule<IDBModule>();
-			var db = module.Engine.DB;
+			var db = module.GetDB(bucket);
 			
 			await ctx.Response.WithJSON(new StatsModel
 			{

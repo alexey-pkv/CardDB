@@ -13,7 +13,7 @@ namespace CardDB
 		public string ID { get; set; }
 		public string BucketID { get; set; }
 		public ulong SequenceID { get; set; }
-		public Dictionary<string, string> Properties { get; } = new();
+		public Dictionary<string, string> Properties { get; init; }
 		public int Count => m_view.Count;
 		public bool IsDeleted { get; set; } = false;
 		public bool IsView => Indexer != null; 
@@ -22,30 +22,6 @@ namespace CardDB
 		
 		public void SetProperty(string key, string value) => Properties[key] = value;
 		public void DeleteProperty(string key) => Properties.Remove(key);
-
-		
-		public Card() {}
-		public Card(string id) { ID = id; }
-		
-		public Card(string id, IIndexer indexer)
-		{
-			ID = id;
-			Indexer = indexer;
-		}
-		
-		public Card(string id, IIndexer indexer, IDictionary<string, string> props)
-		{
-			ID = id;
-			Indexer = indexer;
-			
-			if (props != null)
-			{
-				foreach (var kvp in props)
-				{
-					Properties.Add(kvp.Key, kvp.Value);
-				}
-			}
-		}
 		
 		
 		public void UpdateSequence(ulong to)

@@ -17,7 +17,7 @@ namespace CardDB.Engine
 		
 		private IActionPersistence m_persistence;
 		
-		private DB m_db = new();
+		private DB m_db;
 		private ActionsOperator m_actions = new();
 		private ReIndexOperator m_indexer = new();
 
@@ -26,6 +26,7 @@ namespace CardDB.Engine
 		#region Properties
 		
 		public DB DB => m_db;
+		public Bucket Bucket { get; }
 		
 		#endregion
 		
@@ -67,6 +68,16 @@ namespace CardDB.Engine
 				LastSequenceID	= 0,
 				UpdatesConsumer	= GetSingleConsumer(actionsConsumers)
 			});
+		}
+		
+		#endregion
+		
+		#region Constructor
+		
+		public DBEngine(Bucket b)
+		{
+			Bucket = b;
+			m_db = new DB(b);
 		}
 		
 		#endregion
@@ -114,11 +125,6 @@ namespace CardDB.Engine
 				m_indexer.Stop(),
 				m_actions.StopConsumer()
 			);
-		}
-		
-		public bool TryGetView(string id, out Card view)
-		{
-			return DB.Views.Views.TryGetValue(id, out view);
 		}
 		
 		#endregion

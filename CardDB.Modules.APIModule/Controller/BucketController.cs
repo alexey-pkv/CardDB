@@ -11,7 +11,7 @@ namespace CardDB.Modules.APIModule.Controller
 	public static class BucketController
 	{
 		[ParameterRoute(HttpMethod.GET, "/bucket/{name}")]
-		public static async Task GetCard(HttpContext ctx)
+		public static async Task GetBucket(HttpContext ctx)
 		{
 			var module = Container.GetModule<IPersistenceModule>();
 			var name = ctx.GetURLString("name");
