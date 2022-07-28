@@ -31,10 +31,10 @@ namespace CardDB.Updates
 		{
 			return new CardUpdate
 			{
-				Sequence = a.Sequence,
-				Card = card,
-				NewProperties = new Dictionary<string, string>(card.Properties),
-				UpdateType = UpdateType.Added
+				Sequence		= a.Sequence,
+				Card			= card,
+				NewProperties	= new Dictionary<string, string>(card.Properties),
+				UpdateType		= UpdateType.Added
 			};
 		}
 	}

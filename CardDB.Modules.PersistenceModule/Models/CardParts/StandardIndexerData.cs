@@ -13,6 +13,8 @@ namespace CardDB.Modules.PersistenceModule.Models.CardParts
 		public ConditionModel condition { get; set; }
 		
 		
+		public StandardIndexerData() {}
+		
 		public StandardIndexerData(StandardIndexer indexer)
 		{
 			if (indexer.OrderProperties.Length > 0)

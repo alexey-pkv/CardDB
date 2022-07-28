@@ -90,7 +90,7 @@ namespace CardDB.Modules.APIModule.Utils
 				throw new APIInvalidBucketNameException(bucketName);
 			}
 			
-			var bucket = await Container.GetModule<IPersistenceModule>().GetByName(bucketName);
+			var bucket = await Container.GetModule<IPersistenceModule>().GetBucketByName(bucketName);
 			
 			if (bucket == null)
 			{

@@ -34,5 +34,9 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		public Task<K> LoadOneByField<T, K>(string table, string field, string value) 
 			where T : IDataModel<K>, new()
 			where K : class;
+		
+		public Task<K[]> Select<T, K>(string select, object[] bind) 
+			where T : IDataModel<K>, new()
+			where K : class;
 	}
 }

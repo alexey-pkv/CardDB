@@ -28,7 +28,7 @@ namespace CardDB.Modules.APIModule.Controller
 				return;
 			}
 			
-			var bucket = await module.GetByName(name);
+			var bucket = await module.GetBucketByName(name);
 			
 			if (bucket == null)
 			{
@@ -54,7 +54,7 @@ namespace CardDB.Modules.APIModule.Controller
 			
 			try
 			{
-				bucket = await module.Create(name);
+				bucket = await module.CreateBucket(name);
 			}
 			catch (BucketAlreadyExistsException e)
 			{

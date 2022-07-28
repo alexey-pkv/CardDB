@@ -32,7 +32,6 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		public Action LoadByID(ulong id)
 		{
-			// TODO: ads
 			return null;
 		}
 	}

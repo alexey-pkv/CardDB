@@ -127,6 +127,21 @@ namespace CardDB.Engine
 			);
 		}
 		
+		public void PreLoadCard(Card c)
+		{
+			m_db.Cards.AddCard(c);
+			
+			if (c.IsView)
+			{
+				m_db.Views.AddView(c);
+			}
+		}
+		
+		public async Task BuildInitialIndexes(Action<int, int, int> countCallback = null)
+		{
+			await m_indexer.BuildInitialIndexes(countCallback);
+		}
+		
 		#endregion
 	}
 }

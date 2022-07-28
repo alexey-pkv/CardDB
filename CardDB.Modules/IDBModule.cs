@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CardDB.Engine;
 using Library;
@@ -18,5 +19,8 @@ namespace CardDB.Modules
 		public bool TryGetView(Bucket b, string id, out Card view);
 		
 		public Task AddAction(Bucket b, Action action);
+		
+		public Task PreLoadCards(IEnumerable<Card> cards);
+		public Task PreBuildIndexes();
 	}
 }

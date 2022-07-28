@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
+using System.Linq;
 using CardDB.Updates;
 using CardDB.Engine.Core;
 using CardDB.Engine.StartupData;
@@ -113,18 +113,6 @@ namespace CardDB.Engine.Operators
 			}
 		}
 		
-		#endregion
-		
-		
-		#region Methods
-		
-		public void Setup(ReIndexOperatorStartupData data)
-		{
-			m_db = data.DB;
-			m_consumer = data.Consumer;
-		}
-		
-		
 		private void ConsumeCardUpdate(CardUpdate update)
 		{
 			AddCardUpdate(update);
@@ -135,6 +123,16 @@ namespace CardDB.Engine.Operators
 			}
 		}
 		
+		#endregion
+		
+		
+		#region Methods
+		
+		public void Setup(ReIndexOperatorStartupData data)
+		{
+			m_db = data.DB;
+			m_consumer = data.Consumer;
+		}
 		
 		public void Consume(IUpdate update)
 		{
@@ -199,6 +197,44 @@ namespace CardDB.Engine.Operators
 			{
 				await Task.Delay(1);
 			}
+		}
+		
+		public async Task BuildInitialIndexes(Action<int, int, int> countCallback = null)
+		{
+			var countLock = new object();
+			var views = m_db.Views.Views.Values.ToArray();
+			
+			var viewsCount	= views.Length;
+			var cardsCount	= m_db.Cards.Count;
+			var indexedCount	= 0;
+			
+			var indexers = new List<Task>();
+
+			foreach (var view in views)
+			{
+				var consumer = countCallback == null ? null : new CountConsumer();
+				
+				Indexer i = new()
+				{
+					Sequence		= 0,
+					DB				= m_db,
+					UpdatesConsumer	= consumer,
+					View			= view
+				};
+				
+				var task = i.Index();
+					
+				if (countCallback != null)
+				{
+					task = task.ContinueWith(_ => { lock (countLock) { indexedCount += consumer.Count; } });
+				}
+				
+				indexers.Add(task);
+			}
+			
+			await Task.WhenAll(indexers);
+			
+			countCallback?.Invoke(cardsCount, viewsCount, indexedCount);
 		}
 		
 		#endregion

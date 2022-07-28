@@ -69,12 +69,12 @@ namespace CardDB.Demon
 		public void SetupModules(IModuleContainer container, IConfig config)
 		{
 			container.SetModule<ITestModule>(new TestModule());
+			container.SetModule<IPersistenceModule>(new PersistenceModule());
 			container.SetModule<ISignalsModule>(new SignalsModule());
 			container.SetModule<IRuntimeModule>(new RuntimeModule());
 			container.SetModule<IDBModule>(new DBModule());
 			container.SetModule<IAPIModule>(new APIModule());
 			container.SetModule<IUpdatesLogModule>(new UpdatesLogModule());
-			container.SetModule<IPersistenceModule>(new PersistenceModule());
 		}
 
 		public Task Run(IModuleContainer container, IConfig config)

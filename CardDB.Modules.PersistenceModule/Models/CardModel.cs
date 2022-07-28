@@ -43,7 +43,13 @@ namespace CardDB.Modules.PersistenceModule.Models
 				m_card.IsDeleted = is_del.ToString() == "1";
 			
 			if (data.TryGetValue("Data", out var d))
+			{
 				CardData.SetData(d.ToString(), m_card);
+			}
+			else
+			{
+				m_card.Properties = new Dictionary<string, string>();
+			}
 		}
 		
 		public Dictionary<string, object> ToData()

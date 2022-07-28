@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
 using Library;
 using Library.State;
 
@@ -12,8 +14,8 @@ namespace CardDB.Modules.DBModule
 	public class DBModule : AbstractModule, IDBModule
 	{
 		private Dictionary<string, DBEngine> m_engines = new();
-
-
+		
+		
 		public override string Name => "DB";
 
 		
@@ -34,6 +36,22 @@ namespace CardDB.Modules.DBModule
 			return e;
 		}
 		
+		private async Task PreLoadCard(Card card)
+		{
+			var module = GetModule<IPersistenceModule>();
+			
+			var bucket = await module.GetBucketByID(card.BucketID);
+			
+			if (bucket == null)
+			{
+				Log.Error($"[{Name}] Failed to load card {card.ID}. Bucket {card.BucketID} not found!");
+				return;
+			}
+			
+			var engine = GetOrCreateEngine(bucket);
+			
+			engine.PreLoadCard(card);
+		}
 		
 		
 		public DBEngine GetEngine(Bucket bucket)
@@ -117,6 +135,45 @@ namespace CardDB.Modules.DBModule
 			action.BucketID = b.ID;
 			
 			await e.AddAction(action);
+		}
+		
+		public async Task PreLoadCards(IEnumerable<Card> cards)
+		{
+			foreach (var card in cards)
+			{
+				await PreLoadCard(card);
+			}
+		}
+		
+		public async Task PreBuildIndexes()
+		{
+			IEnumerable<DBEngine> engines;
+
+			lock (m_engines)
+			{
+				engines = m_engines.Values.ToArray();
+			}
+			
+			var count = engines.Count();
+			
+			if (count == 0)
+			{
+				Log.Info($"[{Name}] Database is empty");
+			}
+			else
+			{
+				Log.Info($"[{Name}] Loaded {engines.Count()} buckets. Building indexes...");
+				
+				foreach (var engine in engines)
+				{
+					await engine.BuildInitialIndexes(((cards, views, indexed) =>
+					{
+						Log.Info(
+							$"[{Name}] In bucket {engine.Bucket}, building index: {cards} cards, " +
+							$"{views} views, {indexed} total indexes created.");
+					}));
+				}
+			}
 		}
 		
 		

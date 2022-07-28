@@ -20,6 +20,7 @@ namespace CardDB.Modules.PersistenceModule
 	{
 		private const int		BUFFER_SIZE			= 1000;
 		private const double	STORE_INTERVAL_SEC	= 5;
+		private const bool		SETUP_DB			= true;
 		
 		
 		public override string Name => "Persistence";
@@ -37,6 +38,8 @@ namespace CardDB.Modules.PersistenceModule
 		private object m_storeLock = new();
 		private object m_modifiedLock = new();
 		private bool m_isStoring = false;
+		
+		private IDBModule DBModule => GetModule<IDBModule>();
 		
 		
 		private async Task ExecuteStore()
@@ -137,17 +140,11 @@ namespace CardDB.Modules.PersistenceModule
 			}
 		}
 		
-		
-		private async Task PreLoadAsync(bool setupDB)
+		private async Task SetupTestConnection()
 		{
-			if (setupDB)
-			{
-				await SetupDB();
-			}
-			
 			try
 			{
-				m_connector.Test().Wait();
+				await m_connector.Test();
 				Log.Info($"[{Name}] Connection to DB: OK");
 			}
 			catch (Exception e)
@@ -155,6 +152,38 @@ namespace CardDB.Modules.PersistenceModule
 				Log.Fatal($"[{Name}] Connection to DB: FAILED!!!", e);
 				throw;
 			}
+		}
+		
+		private async Task SetupLoadDB()
+		{
+			int count = 0;
+			
+			await m_connector.Card.LoadAll(
+				async (cards) =>
+				{
+					count += cards.Length;
+					await DBModule.PreLoadCards(cards);
+				});
+			
+			Log.Info($"[{Name}] Total cards loaded {count}");
+		}
+		
+		private async Task PreLoadAsync()
+		{
+			Log.Info($"[{Name}] ************ Loading Database ************");
+			
+			if (SETUP_DB) await SetupDB();
+			
+			Log.Info($"[{Name}] (1) Testing connection...");
+			await SetupTestConnection();
+			
+			Log.Info($"[{Name}] (2) Loading db...");
+			await SetupLoadDB();
+			
+			Log.Info($"[{Name}] (3) Building views...");
+			await DBModule.PreBuildIndexes();
+			
+			Log.Info($"[{Name}] ************ Loading complete ************");
 		}
 		
 		
@@ -168,10 +197,10 @@ namespace CardDB.Modules.PersistenceModule
 		
 		public override void PreLoad(IStateManager state)
 		{
-			state.CompleteAfter(PreLoadAsync, param: true);
-			
 			m_storeTimer.Elapsed += (_,_) => ScheduleStore();  
 			m_storeTimer.Start();
+			
+			state.CompleteAfter(PreLoadAsync);
 		}
 
 		public override void PreStop(IStateManager state)
@@ -229,7 +258,7 @@ namespace CardDB.Modules.PersistenceModule
 		
 		#region Bucket
 		
-		public async Task<Bucket> Create(string name)
+		public async Task<Bucket> CreateBucket(string name)
 		{
 			name = Formats.SanitizeBucketName(name);
 			
@@ -253,7 +282,7 @@ namespace CardDB.Modules.PersistenceModule
 			return bucket;
 		}
 
-		public async Task<Bucket> GetByName(string name)
+		public async Task<Bucket> GetBucketByName(string name)
 		{
 			Bucket bucket;
 			
@@ -263,6 +292,24 @@ namespace CardDB.Modules.PersistenceModule
 				return bucket;
 			
 			bucket = await m_connector.Bucket.LoadByName(name);
+			
+			if (bucket != null)
+			{
+				m_bucketByName.Set(bucket.Name, bucket);
+				m_bucketByID.Set(bucket.ID, bucket);
+			}
+			
+			return bucket;
+		}
+		
+		public async Task<Bucket> GetBucketByID(string id)
+		{
+			Bucket bucket;
+			
+			if (m_bucketByID.TryGet(id, out bucket))
+				return bucket;
+			
+			bucket = await m_connector.Bucket.LoadByID(id);
 			
 			if (bucket != null)
 			{

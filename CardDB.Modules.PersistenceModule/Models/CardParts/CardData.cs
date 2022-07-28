@@ -46,7 +46,11 @@ namespace CardDB.Modules.PersistenceModule.Models.CardParts
 		{
 			var res = JSON.Deserialize<CardData>(serialize);
 			
-			target.Properties = new Dictionary<string, string>(res.properties);
+			if (res.properties == null)
+				target.Properties = new Dictionary<string, string>();
+			else
+				target.Properties = new Dictionary<string, string>(res.properties);
+			
 			target.Indexer = res.index?.Get();
 		}
 	}

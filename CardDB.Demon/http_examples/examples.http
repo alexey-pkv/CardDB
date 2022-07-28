@@ -38,6 +38,7 @@ Accept: application/json
 ####################
 POST http://localhost:7373/view
 Accept: application/json
+x-bucket-name: hello_world
 
 {
     "index":
@@ -111,7 +112,8 @@ Accept: application/json
 ### - count - max items to return.
 ### - after - the last order after which to return the cards. In this example after should be `after=["hello","tta3k153asxu"]` -> this is the value of the "order" field of the last returned card 
 ####################
-GET http://localhost:7373/view/qhh8p9vh340f/cards?count=2
+GET http://localhost:7373/view/2bchl99d2fg5/cards?count=2
+x-bucket-name: hello_world
 Accept: application/json
 
 

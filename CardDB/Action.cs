@@ -123,7 +123,7 @@ namespace CardDB
 				ID = GeneratedID ?? await IDGenerator.Generate(),
 				BucketID = BucketID,
 				Indexer = ViewIndex,
-				Properties = Properties,
+				Properties = Properties ?? new Dictionary<string, string>(),
 				SequenceID = Sequence
 			};
 			

@@ -264,7 +264,7 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			
 			foreach (var item in items)
 			{
-				var d = item.ToUpdateData();
+				var d = item.ToData();
 				
 				data.Add(new Dictionary<string, object>(d));
 				
@@ -312,6 +312,32 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			}
 			
 			return model == null ? null : model.GetObject();
+		}
+		
+		public async Task<K[]> Select<T, K>(string select, object[] bind) 
+			where T : IDataModel<K>, new()
+			where K : class
+		{
+			var cmd = await GetCommand(select, bind);
+			var res = await cmd.ExecuteReaderAsync();
+			var result = new List<K>();
+			
+			while (await res.ReadAsync())
+			{
+				var data = new Dictionary<string, object>();
+				
+				for (int i = 0; i < res.FieldCount; i++)
+				{
+					data[res.GetName(i)] = res.GetValue(i);
+				}
+				
+				var model = new T();
+				
+				model.From(data);
+				result.Add(model.GetObject());
+			}
+			
+			return result.ToArray();
 		}
 
 
