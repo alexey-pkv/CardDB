@@ -17,6 +17,8 @@ namespace CardDB.Modules.PersistenceModule.Models.CardParts
 		public StandardIndexerData index { get; set; }
 		
 		
+		public CardData() {}
+		
 		public CardData(Card c)
 		{
 			properties = new Dictionary<string, string>(c.Properties);
@@ -44,12 +46,8 @@ namespace CardDB.Modules.PersistenceModule.Models.CardParts
 		{
 			var res = JSON.Deserialize<CardData>(serialize);
 			
-			foreach (var kvp in res.properties)
-			{
-				target.Properties.Add(kvp.Key, kvp.Value);
-			}
-			
-			target.Indexer = res.index.Get();
+			target.Properties = new Dictionary<string, string>(res.properties);
+			target.Indexer = res.index?.Get();
 		}
 	}
 }

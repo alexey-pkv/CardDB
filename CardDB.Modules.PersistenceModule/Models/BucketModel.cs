@@ -46,6 +46,8 @@ namespace CardDB.Modules.PersistenceModule.Models
 			};
 		}
 		
+		public Dictionary<string, object> ToUpdateData() => ToData();
+		
 		public Bucket GetObject()
 		{
 			return m_bucket;

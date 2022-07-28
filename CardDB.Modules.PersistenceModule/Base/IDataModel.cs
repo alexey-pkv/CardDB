@@ -11,6 +11,7 @@ namespace CardDB.Modules.PersistenceModule.Base
 		public void From(Dictionary<string, object> data);
 		
 		public Dictionary<string, object> ToData();
+		public Dictionary<string, object> ToUpdateData();
 		
 		public void SetAutoIncID(long val);
 		public T GetObject();

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using AdaptiveExpressions;
 using CardDB.MySQL;
 using CardDB.Modules.PersistenceModule.DAO;
@@ -15,6 +18,10 @@ namespace CardDB.Modules.PersistenceModule
 {
 	public class PersistenceModule : AbstractModule, IPersistenceModule
 	{
+		private const int		BUFFER_SIZE			= 1000;
+		private const double	STORE_INTERVAL_SEC	= 5;
+		
+		
 		public override string Name => "Persistence";
 
 		
@@ -22,9 +29,99 @@ namespace CardDB.Modules.PersistenceModule
 		private SimpleTaskQueue m_queue = new();
 		
 		
-		private LRUCache<string, Bucket> m_bucketByName = new(1000);
-		private LRUCache<string, Bucket> m_bucketByID = new(1000);
+		private LRUCache<string, Bucket>	m_bucketByName = new(1000);
+		private LRUCache<string, Bucket>	m_bucketByID = new(1000);
+		private Dictionary<string, Card>	m_modified = new();
 		
+		private Timer m_storeTimer = new(STORE_INTERVAL_SEC * 1000);
+		private object m_storeLock = new();
+		private object m_modifiedLock = new();
+		private bool m_isStoring = false;
+		
+		
+		private async Task ExecuteStore()
+		{
+			IEnumerable<Card> modified;
+			
+			lock (m_modifiedLock)
+			{
+				modified = m_modified.Values.ToArray();
+				m_modified.Clear();	
+			}
+			
+			if (modified.Any())
+			{
+				var start = DateTime.Now;
+				{
+					await m_connector.Card.UpdateAll(modified);
+				}
+				var end = DateTime.Now;
+				
+				Log.Info($"[{Name}] Stored {modified.Count()} items in {end.Subtract(start).TotalMilliseconds} ms");
+			}
+		}
+		
+		private async Task Store()
+		{
+			try
+			{
+				await ExecuteStore();
+			}
+			catch (Exception e)
+			{
+				Log.Error($"[{Name}] Failed to store modified cards", e);
+			}
+			finally
+			{
+				lock (m_storeLock)
+				{
+					m_isStoring = false;
+				}
+			}
+		}
+		
+		private void ScheduleStore()
+		{
+			lock (m_modifiedLock)
+			{
+				if (m_modified.Count == 0)
+				{
+					return;
+				}
+			}
+			
+			lock (m_storeLock)
+			{
+				if (m_isStoring)
+					return;
+				
+				m_isStoring = true;
+			}
+			
+			Task.Run(Store);
+		}
+		
+		private void CheckShouldStore()
+		{
+			if (m_isStoring)
+				return;
+			
+			lock (m_modifiedLock)
+			{
+				if (m_modified.Count < BUFFER_SIZE)
+					return;
+			}
+			
+			lock (m_storeLock)
+			{
+				if (m_isStoring)
+					return;
+				
+				m_isStoring = true;
+			}
+			
+			Task.Run(Store);
+		}
 		
 		private async Task SetupDB()
 		{
@@ -72,9 +169,21 @@ namespace CardDB.Modules.PersistenceModule
 		public override void PreLoad(IStateManager state)
 		{
 			state.CompleteAfter(PreLoadAsync, param: true);
+			
+			m_storeTimer.Elapsed += (_,_) => ScheduleStore();  
+			m_storeTimer.Start();
 		}
-		
-		
+
+		public override void PreStop(IStateManager state)
+		{
+			m_storeTimer.Stop();
+		}
+
+		public override void Stop(IStateManager state)
+		{
+			state.CompleteAfter(ExecuteStore);
+		}
+
 		#region Action Persistence
 		
 		public Task Persist(Action a) => Persist(a, null);
@@ -94,18 +203,32 @@ namespace CardDB.Modules.PersistenceModule
 		
 		public void Consume(IUpdate update)
 		{
-			if (update.TargetType == UpdateTarget.Card && 
-			    update.UpdateType == UpdateType.Added)
+			if (update.TargetType != UpdateTarget.Card)
+				return;
+			
+			var cardUpdate = update as CardUpdate;
+			var card = cardUpdate.Card;
+			var id = card.ID;
+			var check = false;
+			
+			lock (m_modifiedLock)
 			{
-				m_connector.Card.Insert(((CardUpdate)update).Card);
+				m_modified.Add(id, card);
+				
+				check = (m_modified.Count >= BUFFER_SIZE);
+			}
+			
+			if (check)
+			{
+				CheckShouldStore();
 			}
 		}
 		
 		#endregion
-
+		
+		
 		#region Bucket
-
-
+		
 		public async Task<Bucket> Create(string name)
 		{
 			name = Formats.SanitizeBucketName(name);

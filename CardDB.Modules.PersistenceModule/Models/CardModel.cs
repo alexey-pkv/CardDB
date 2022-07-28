@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using CardDB.Modules.PersistenceModule.Base;
 using CardDB.Modules.PersistenceModule.Models.CardParts;
-using Library;
 
 
 namespace CardDB.Modules.PersistenceModule.Models
@@ -45,27 +44,31 @@ namespace CardDB.Modules.PersistenceModule.Models
 			
 			if (data.TryGetValue("Data", out var d))
 				CardData.SetData(d.ToString(), m_card);
-				
 		}
 		
 		public Dictionary<string, object> ToData()
 		{
-			if (m_card != null)
+			return new Dictionary<string, object>
 			{
-				return new Dictionary<string, object>
-				{
-					{ "ID",			m_card.ID },
-					{ "BucketID",	m_card.BucketID },
-					{ "SequenceID",	m_card.SequenceID },
-					{ "IsDeleted",	m_card.IsDeleted },
-					{ "Type",		m_card.IsView ? "View" : "Card" },
-					{ "Data",		CardData.GetData(m_card) }
-				};
-			}
-			else
+				{ "ID",			m_card.ID },
+				{ "BucketID",	m_card.BucketID },
+				{ "SequenceID",	m_card.SequenceID },
+				{ "IsDeleted",	m_card.IsDeleted },
+				{ "Type",		m_card.IsView ? "View" : "Card" },
+				{ "Data",		CardData.GetData(m_card) }
+			};
+		}
+		
+		public Dictionary<string, object> ToUpdateData()
+		{
+			return new Dictionary<string, object>
 			{
-				return null;
-			}
+				{ "ID",			m_card.ID },
+				{ "SequenceID",	m_card.SequenceID },
+				{ "IsDeleted",	m_card.IsDeleted },
+				{ "Type",		m_card.IsView ? "View" : "Card" },
+				{ "Data",		CardData.GetData(m_card) }
+			};
 		}
 		
 		public Card GetObject()

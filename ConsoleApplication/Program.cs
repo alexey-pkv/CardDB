@@ -19,16 +19,15 @@ namespace ConsoleApplication
 			var a = new Action();
 			
 			
-			a.ActionType = ActionType.DeleteCard;
-			a.GeneratedID = await IDGenerator.Generate();
-			a.Properties = new Dictionary<string, string>
-			{
-				{ "A" , "hello world"}	
-			};
+			var c = new Connector(new Config());
+			var dao = new CardDAO(c);
 			
-			await conn.Action.Save(a);
+			var card = await dao.Load("tdwuxid7m5t0");
 			
-			// var res= conn.Action.Load(0, 10);
+			card.Properties["asdsa"] = "asdasdas";
+			card.SequenceID = 781;
+			
+			await dao.Update(card);
 			
 			return;
 			

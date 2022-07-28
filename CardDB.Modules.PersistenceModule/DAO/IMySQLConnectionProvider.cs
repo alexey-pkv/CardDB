@@ -24,7 +24,12 @@ namespace CardDB.Modules.PersistenceModule.DAO
 		
 		public Task<long> Insert<T>(string table, IDataModel<T> o);
 		public Task<long?> InsertIgnore<T>(string table, IDataModel<T> o);
+		
+		public Task<long> Update(string table, Dictionary<string, object> values, Dictionary<string, object> byFields);
 		public Task<long> Update<T>(string table, IDataModel<T> o);
+		
+		public Task<long> UpdateAll(string table, IEnumerable<Dictionary<string, object>> items, string[] byFields);
+		public Task<long> UpdateAll<T>(string table, IEnumerable<IDataModel<T>> items);
 		
 		public Task<K> LoadOneByField<T, K>(string table, string field, string value) 
 			where T : IDataModel<K>, new()

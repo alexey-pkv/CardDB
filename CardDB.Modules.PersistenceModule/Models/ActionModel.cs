@@ -100,6 +100,11 @@ namespace CardDB.Modules.PersistenceModule.Models
 			};
 		}
 		
+		public Dictionary<string, object> ToUpdateData()
+		{
+			throw new NotSupportedException("Can not update Action");
+		}
+		
 		public Action GetObject()
 		{
 			return m_action;

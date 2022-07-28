@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
+using System.Text;
 using CardDB.Modules.PersistenceModule.Base;
 using CardDB.Modules.PersistenceModule.Base.DAO;
 
@@ -192,11 +192,95 @@ namespace CardDB.Modules.PersistenceModule.DAO
 			
 			return id;
 		}
-
-		public Task<long> Update<T>(string table, IDataModel<T> o)
+		
+		
+		public async Task<long> Update(string table, Dictionary<string, object> values, Dictionary<string, object> byFields)
 		{
-			throw new NotImplementedException();
+			var updateColumns	= String.Join(" = ?, ", values.Keys) + " = ?";
+			var whereColumns	= String.Join(" = ? AND ", byFields.Keys) + " = ?";
+			var bind			= values.Values.Concat(byFields.Values).ToArray();
+			
+			var cmd = await GetCommand(
+				$"UPDATE {table} " +
+					$"SET {updateColumns} " + 
+					$"WHERE {whereColumns}",
+				bind);
+			
+			return await cmd.ExecuteNonQueryAsync();
 		}
+
+		public async Task<long> Update<T>(string table, IDataModel<T> o)
+		{
+			var data = o.ToUpdateData();
+			var by = new Dictionary<string, object>();
+			
+			by[o.PrimaryID] = data[o.PrimaryID];
+			data.Remove(o.PrimaryID);
+			
+			var res=  await Update(table, data, by);
+			
+			return res;
+		}
+		
+		
+		public async Task<long> UpdateAll(string table, IEnumerable<Dictionary<string, object>> items, string[] byFields)
+		{
+			List<object> binds = new List<object>();
+			var insertString = new List<string>();
+			var updateString = new List<string>();
+			var fieldsString = new List<string>();
+
+			foreach (var item in items)
+			{
+				if (fieldsString.Count == 0)
+				{
+					fieldsString.AddRange(item.Keys);
+				}
+				
+				var bindArray = Enumerable.Repeat("?", item.Count).ToArray();
+				
+				insertString.Add($"({String.Join(", ", bindArray)})");
+				binds.AddRange(item.Values);
+			}
+			
+			foreach (var field in byFields)
+			{
+				updateString.Add($"{field} = VALUES(`{field}`)");
+			}
+			
+			var cmd = await GetCommand(
+				$"INSERT INTO {table} ({String.Join(", ", fieldsString)}) " +
+					$"VALUES {String.Join(", ", insertString)} " + 
+					$"ON DUPLICATE KEY UPDATE {String.Join(", ", updateString)}",
+				binds.ToArray());
+			
+			return await cmd.ExecuteNonQueryAsync();
+		}
+		
+		public async Task<long> UpdateAll<T>(string table, IEnumerable<IDataModel<T>> items)
+		{
+			List<Dictionary<string, object>> data = new List<Dictionary<string, object>>(items.Count());
+			string[] byFields = null;
+			
+			foreach (var item in items)
+			{
+				var d = item.ToUpdateData();
+				
+				data.Add(new Dictionary<string, object>(d));
+				
+				if (byFields == null)
+				{
+					d.Remove(item.PrimaryID);
+					byFields = d.Keys.ToArray();
+				}
+			}
+			
+			if (byFields == null)
+				return 0;
+			
+			return await UpdateAll(table, data, byFields);
+		}
+		
 		
 		public async Task<K> LoadOneByField<T, K>(string table, string field, string value)
 			where T : IDataModel<K>, new()
